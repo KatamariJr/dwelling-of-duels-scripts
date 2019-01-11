@@ -5,4 +5,5 @@ __pycache__
 *-oauth2.json
 client_secrets.json
 voting
-*_old.txt
+uploadedIDs_old.txt
+uploadedIDs.txt

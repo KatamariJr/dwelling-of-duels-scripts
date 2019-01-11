@@ -1,13 +1,11 @@
 import os
 
-
-f=open("uploadSettings.txt", "r")
+f = open("uploadSettings.txt", "r")
 for line in f:
     if line.startswith("playlistTitle="):
         playlistTitle = line[14:]
         break
 f.close()
-
 
 idListName = "uploadedIDs.txt"
 
