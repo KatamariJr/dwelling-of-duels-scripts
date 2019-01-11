@@ -1,2 +1,0 @@
-playlistTitle=2018.03 Free
-descInfo=Mar 2018 - Free Month
