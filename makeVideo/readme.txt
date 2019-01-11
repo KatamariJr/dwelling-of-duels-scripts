@@ -1,0 +1,1 @@
+put "video creator.bat" and "ffmpeg.exe" into a folder that contains mp3 files and your artwork as a jpg. run "video creator.bat"
