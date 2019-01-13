@@ -1,2 +1,2 @@
-playlistTitle=2018.03 Free
-descInfo=Mar 2018 - Free Month
+playlistTitle=2018.04 DOS
+descInfo=Apr 2018 - DOS Month

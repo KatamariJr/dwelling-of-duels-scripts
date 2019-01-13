@@ -175,14 +175,14 @@ def build_resource(properties):
                         ref[key] = properties[p].split(',')
                     else:
                         ref[key] = properties[p]
-                elif key not in ref:
+            elif key not in ref:
             # For example, the property is "snippet.title", but the resource does
             # not yet have a "snippet" object. Create the snippet object here.
             # Setting "ref = ref[key]" means that in the next time through the
             # "for pa in range ..." loop, we will be setting a property in the
             # resource's "snippet" object.
-                    ref[key] = {}
-                    ref = ref[key]
+                ref[key] = {}
+                ref = ref[key]
             else:
             # For example, the property is "snippet.description", and the resource
             # already has a "snippet" object.
