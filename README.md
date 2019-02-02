@@ -1,4 +1,4 @@
-#Dwelling of Duels Utility Scripts
+# Dwelling of Duels Utility Scripts
 
 These scripts help with multiple steps in the monthly DoD flow of uploading to YouTube:
 - Converting audio files (mp3) into video files (mp4) featuring a static image.
