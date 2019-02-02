@@ -20,6 +20,8 @@ cd ..\uploadVideo
 
 xcopy uploadedIDs.txt uploadedIDs_old.txt /Y
 
+DEL uploadedIDs.txt
+
 call upload.bat
 
 pause
