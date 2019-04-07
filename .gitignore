@@ -1,10 +1,11 @@
 *.mp3
 *.mp4
 *.jpg
+*.log
 __pycache__/
 *-oauth2.json
 client_secrets.json
 voting/
-uploadSettings.txt
+*\uploadSettings.txt
 uploadedIDs_old.txt
 uploadedIDs.txt
