@@ -9,3 +9,6 @@ voting/
 *\uploadSettings.txt
 uploadedIDs_old.txt
 uploadedIDs.txt
+__pycache__
+lib
+uploadSettings.txt

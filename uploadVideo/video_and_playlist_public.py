@@ -1,8 +1,8 @@
 #!/usr/bin/python
 
 
-from apiclient.discovery import build
-from apiclient.errors import HttpError
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
 from oauth2client.tools import argparser
 
 import api_stuff

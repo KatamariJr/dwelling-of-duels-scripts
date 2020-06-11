@@ -1,2 +1,2 @@
-playlistTitle=2019.02 Snow
-descInfo=Feb 2019 - Snow Month
+playlistTitle=2020.05 Golf Vs Fishing
+descInfo=May 2020 - Golf Vs Fishing Month
