@@ -12,3 +12,9 @@ uploadedIDs.txt
 __pycache__
 lib
 uploadSettings.txt
+renameArtist/.idea/.gitignore
+renameArtist/.idea/inspectionProfiles/profiles_settings.xml
+renameArtist/.idea/misc.xml
+renameArtist/.idea/modules.xml
+renameArtist/.idea/renameArtist.iml
+renameArtist/.idea/vcs.xml
