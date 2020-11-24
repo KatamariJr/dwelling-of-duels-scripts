@@ -50,7 +50,6 @@ def initialize_upload(youtube, options):
     api_stuff.resumable_upload(insert_request)
 
 
-
 if __name__ == '__main__':
     argparser.add_argument("--file", required=True, help="Video file to upload")
     argparser.add_argument("--title", help="Video title", default="Test Title")
