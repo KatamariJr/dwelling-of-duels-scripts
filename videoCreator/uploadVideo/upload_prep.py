@@ -1,5 +1,7 @@
 import os
 
+from utils import splitName
+
 DESC = "Dwelling of Duels is a monthly music competition based around video game soundtracks. Competitors anonymously submit redone versions of video game music in which the main instrument must be performed live, not sequenced, and the entries are voted upon by the community.\nhttp://dwellingofduels.net/  \nhttps://www.facebook.com/dwellingofduels"
 # category 10 is music
 CATEGORY = "10"
@@ -20,24 +22,7 @@ print(FULL_DESC)
 for filename in os.listdir("."):
     if filename.endswith(".mp4"):
         print("\n\n")
-        rank = filename.split("-")[0]
-        if rank == "ZZ":
-            rank = "ALT"
-            artist = filename.split("-")[1]
-            game = filename.split("-")[2]
-            title = filename.split("-")[3]
-        elif not rank.isdigit():
-            rank = None
-            artist = filename.split("-")[0]
-            game = filename.split("-")[1]
-            title = filename.split("-")[2]
-        else:
-            artist = filename.split("-")[1]
-            game = filename.split("-")[2]
-            title = filename.split("-")[3]
-
-        if artist == "Anon":
-            artist = "Anonymous DoD Contestant"
+        rank, artist, game, title = splitName(filename)
 
         if rank is None:
             formattedTitle = "{} - {} - {}".format(artist, game, title)
