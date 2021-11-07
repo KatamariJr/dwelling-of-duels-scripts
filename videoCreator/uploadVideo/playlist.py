@@ -24,7 +24,7 @@ def create_playlist(youtube,args):
             )
         )
     ).execute()
-
+    
     print("New playlist id: %s" % playlists_insert_response["id"])
     return playlists_insert_response["id"]
 
@@ -73,7 +73,7 @@ def prepend(originalfile, string):
 
 
 if __name__ == '__main__':
-    argparser.add_argument("--file", required=False, help="list of IDs to link in playlist")
+    argparser.add_argument("--file", required=True, help="list of IDs to link in playlist")
     argparser.add_argument("--title", help="Playlist title", default="Test Title")
     argparser.add_argument("--description", help="Playlist description",
                            default="Test Description")

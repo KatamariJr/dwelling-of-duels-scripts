@@ -194,10 +194,10 @@ def readFromFile(filename):
     f = open(filename, "r")
     arr = []
     for line in f:
-        if len(line) == 0:
-            continue
         line = line.replace("\n", "")
         line = line.replace("\r", "")
+        if len(line) == 0:
+            continue
         arr.append(line)
     f.close()
     return arr
