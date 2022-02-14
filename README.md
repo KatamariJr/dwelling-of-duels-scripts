@@ -6,3 +6,6 @@ These scripts help with multiple steps in the monthly DoD flow of uploading to Y
 - Create a playlist for the monthly song set.
 - Add all videos to playlist.
 - Apply public visibility to all videos and playlists after confirmation of accuracy.
+
+# TODO
+- vendor ffmpeg to comply with 12-factor
