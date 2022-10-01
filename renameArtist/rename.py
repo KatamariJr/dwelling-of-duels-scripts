@@ -27,17 +27,20 @@ def replaceArtistTags(fileLocation, artistFind, artistReplace):
     songData = MP3File(fileLocation)
     songData.set_version(VERSION_2)
     artistTag = songData.artist
-    if artistFind in artistTag:
-        if SKIP_ARTIST_CHECK:
-            choice = "y"
-        else:
-            choice = input("replace in %s (y/n)?" % artistTag)
-        if choice == "y":
-            # do the replace
-            artistTag = artistTag.replace(artistFind, artistReplace)
-            print(artistTag)
-            songData.artist = artistTag
-            songData.save()
+    try:
+        if artistFind in artistTag:
+            if SKIP_ARTIST_CHECK:
+                choice = "y"
+            else:
+                choice = input("replace in %s (y/n)?" % artistTag)
+            if choice == "y":
+                # do the replace
+                artistTag = artistTag.replace(artistFind, artistReplace)
+                print(artistTag)
+                songData.artist = artistTag
+                songData.save()
+    except TypeError as err:
+        print("Err: '%s' when reading file %s" % (err, fileLocation))
 
 def replaceInFilename(fileLocation, artistFind, artistReplace):
     if artistFind in fileLocation:
@@ -55,7 +58,7 @@ if __name__ == '__main__':
         artistReplace = sys.argv[3]
         print("artistReplace: " + artistReplace)
     except:
-        print("must have a folder path as first arg, artist name as second arg")
+        print("must have a folder path as first arg, original artist name as second arg, replacement artist name as third arg")
         exit(1)
     print(os.getcwd())
     if not os.path.isdir(directory):
