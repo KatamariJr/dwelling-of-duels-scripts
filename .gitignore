@@ -1,6 +1,7 @@
 *.mp3
 *.mp4
 *.jpg
+*.png
 *.log
 __pycache__/
 *-oauth2.json
