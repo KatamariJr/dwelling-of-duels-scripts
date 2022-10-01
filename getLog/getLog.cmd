@@ -2,11 +2,11 @@
 echo Twitch chatlog getter
 set /p id="Enter Twitch VOD ID: "
 
-call twitch-chatlog -l 0 %id% > "temp"
+call TwitchDownloaderCLI.exe -m ChatDownload -o temp.txt -u %id%
 
-type "temp" | find /v "" > "log%id%.log"
+type "temp.txt" | find /v "" > "log%id%.log"
 
-DEL "temp"
+DEL "temp.txt"
 
 echo Log dumped to log%id%.log
 pause
