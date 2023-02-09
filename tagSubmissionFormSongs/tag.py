@@ -2,6 +2,18 @@ import json
 import os
 import shutil
 
+def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, srcFile: str, outputDirectory: str):
+    newFilename = ""
+    if isAlt:
+        newFilename = "ZZ-%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
+    else:
+        newFilename = "%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
+
+    newFilename = "".join(x for x in newFilename if x.isalnum() or x in "._- ,!")
+
+    shutil.copyfile(srcFile, outputDirectory + '/' + newFilename)
+
+
 fileDirectory = "./files"
 
 fileDirectoryListing = os.listdir(fileDirectory)
@@ -28,29 +40,11 @@ for filename in fileDirectoryListing:
 
 
     # create file for non-anonymized
-    newFilename = ""
-    if isAlt:
-        newFilename = "ZZ-%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
-    else:
-        newFilename = "%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
-
-    newFilename = "".join(x for x in newFilename if x.isalnum() or x in "._- ,!")
-
-    shutil.copyfile(fileDirectory + '/' + filename, fileDirectory + '/newSongs/' + newFilename)
-
+    renameAndMove(isAlt, artistNames, gameNames, songTitle, fileDirectory + '/' + filename, fileDirectory + '/newSongs')
 
 
     # create file for anonymized
-    artistNames = "Anonymous DoD Contestant"
-    newFilenameAnon = ""
-    if isAlt:
-        newFilenameAnon = "ZZ-%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
-    else:
-        newFilenameAnon = "%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
-
-    newFilenameAnon = "".join(x for x in newFilenameAnon if x.isalnum() or x in "._- ,!")
-
-    shutil.copyfile(fileDirectory + '/' + filename, fileDirectory + '/newSongsAnon/' + newFilenameAnon)
+    renameAndMove(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, fileDirectory + '/' + filename, fileDirectory + '/newSongsAnon')
 
 
 
