@@ -3,23 +3,35 @@ import os
 import shutil
 import eyed3
 
-def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str) -> None:
+
+def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str) -> None:
+    extension = ""
+    if "json" in srcFile:
+        extension = "json"
+    elif "mp3" in srcFile:
+        extension = "mp3"
+
     if isAlt:
-        newFilename = "ZZ-%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
+        newFilename = "ZZ-%s-%s-%s-DoD.%s" % (artistNames, gameNames, songTitle, extension)
     else:
-        newFilename = "%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
+        newFilename = "%s-%s-%s-DoD.%s" % (artistNames, gameNames, songTitle, extension)
 
     newFilename = "".join(x for x in newFilename if x.isalnum() or x in "._- ,!")
 
     targetFilename = outputDirectory + '/' + newFilename
 
-    print(targetFilename)
+    print(newFilename)
 
     shutil.copyfile(srcFile, targetFilename)
 
+    if extension == "mp3":
+        retag(targetFilename, artistNames, gameNames, songTitle, albumName)
+
+
+def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str, albumName: str):
     audiofile = eyed3.load(targetFilename)
     if audiofile is None:
-        raise("File mp3 open fail!!!")
+        raise "File mp3 open fail!!!"
     audiofile.initTag()
     audiofile.tag.artist = artistNames
     audiofile.tag.non_std_genre = gameNames
@@ -30,7 +42,6 @@ def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str,
         audiofile.tag.track_num = 99
 
     audiofile.tag.save()
-
 
 
 fileDirectory = "./files"
@@ -49,7 +60,6 @@ for filename in fileDirectoryListing:
         continue
     splitFilename = filename.split(".")
     uuid = splitFilename[0]
-    extension = splitFilename[1]
 
     jsonData = json.loads(open(fileDirectory + '/' + filename, 'r').read())
 
@@ -59,15 +69,10 @@ for filename in fileDirectoryListing:
     gameNames = jsonData['gameNames']
     isAlt = jsonData['isAlt'] == "true"
 
-
-
     # create file for non-anonymized
-    renameAndMove(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs')
-
+    renameAndCopy(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs')
+    renameAndCopy(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + filename, fileDirectory + '/newSongs')
 
     # create file for anonymized
-    renameAndMove(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon')
-
-
-
+    renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon')
 
