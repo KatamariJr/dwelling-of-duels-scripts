@@ -2,8 +2,7 @@ import json
 import os
 import shutil
 
-def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, srcFile: str, outputDirectory: str):
-    newFilename = ""
+def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, srcFile: str, outputDirectory: str) -> None:
     if isAlt:
         newFilename = "ZZ-%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
     else:
