@@ -6,15 +6,17 @@ import eyed3
 
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str) -> None:
     extension = ""
+    originalUUID = ""
     if "json" in srcFile:
         extension = "json"
+        originalUUID = "-" + srcFile[8:-5]
     elif "mp3" in srcFile:
         extension = "mp3"
 
     if isAlt:
-        newFilename = "ZZ-%s-%s-%s-DoD.%s" % (artistNames, gameNames, songTitle, extension)
+        newFilename = "ZZ-%s-%s-%s-DoD%s.%s" % (artistNames, gameNames, songTitle, originalUUID, extension)
     else:
-        newFilename = "%s-%s-%s-DoD.%s" % (artistNames, gameNames, songTitle, extension)
+        newFilename = "%s-%s-%s-DoD%s.%s" % (artistNames, gameNames, songTitle, originalUUID, extension)
 
     newFilename = "".join(x for x in newFilename if x.isalnum() or x in "._- ,!")
 
