@@ -1,8 +1,9 @@
 import json
 import os
 import shutil
+import eyed3
 
-def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, srcFile: str, outputDirectory: str) -> None:
+def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str) -> None:
     if isAlt:
         newFilename = "ZZ-%s-%s-%s-DoD.mp3" % (artistNames, gameNames, songTitle)
     else:
@@ -10,10 +11,31 @@ def renameAndMove(isAlt: bool, artistNames: str, gameNames: str, songTitle: str,
 
     newFilename = "".join(x for x in newFilename if x.isalnum() or x in "._- ,!")
 
-    shutil.copyfile(srcFile, outputDirectory + '/' + newFilename)
+    targetFilename = outputDirectory + '/' + newFilename
+
+    print(targetFilename)
+
+    shutil.copyfile(srcFile, targetFilename)
+
+    audiofile = eyed3.load(targetFilename)
+    if audiofile is None:
+        raise("File mp3 open fail!!!")
+    audiofile.initTag()
+    audiofile.tag.artist = artistNames
+    audiofile.tag.non_std_genre = gameNames
+    audiofile.tag.title = songTitle
+    audiofile.tag.album = albumName
+    audiofile.tag.original_release_date = 2023
+    if isAlt:
+        audiofile.tag.track_num = 99
+
+    audiofile.tag.save()
+
 
 
 fileDirectory = "./files"
+
+albumName = "DoD-23-01: Testing Theme"
 
 fileDirectoryListing = os.listdir(fileDirectory)
 
@@ -38,12 +60,13 @@ for filename in fileDirectoryListing:
     isAlt = jsonData['isAlt'] == "true"
 
 
+
     # create file for non-anonymized
-    renameAndMove(isAlt, artistNames, gameNames, songTitle, fileDirectory + '/' + filename, fileDirectory + '/newSongs')
+    renameAndMove(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs')
 
 
     # create file for anonymized
-    renameAndMove(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, fileDirectory + '/' + filename, fileDirectory + '/newSongsAnon')
+    renameAndMove(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon')
 
 
 
