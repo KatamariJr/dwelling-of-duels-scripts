@@ -39,7 +39,8 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
     audiofile.tag.non_std_genre = gameNames
     audiofile.tag.title = songTitle
     audiofile.tag.album = albumName
-    audiofile.tag.original_release_date = 2023
+    audiofile.tag.recording_date = "2023"
+    audiofile.tag.comments.set('www.dwellingofduels.net')
     if isAlt:
         audiofile.tag.track_num = 99
 
