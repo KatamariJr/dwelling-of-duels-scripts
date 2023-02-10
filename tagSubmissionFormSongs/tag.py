@@ -13,10 +13,23 @@ def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str,
     elif "mp3" in srcFile:
         extension = "mp3"
 
+    # check maximum lengths for names for filename
+    truncatedArtistNames = artistNames
+    if len(artistNames) > 50:
+        truncatedArtistNames = artistNames[:50]
+
+    truncatedGameNames = gameNames
+    if len(gameNames) > 50:
+        truncatedGameNames = gameNames[:50]
+
+    truncatedSongTitle = songTitle
+    if len(songTitle) > 150:
+        truncatedSongTitle = songTitle[:150]
+
     if isAlt:
-        newFilename = "ZZ-%s-%s-%s-DoD%s.%s" % (artistNames, gameNames, songTitle, originalUUID, extension)
+        newFilename = "ZZ-%s-%s-%s-DoD%s.%s" % (truncatedArtistNames, truncatedGameNames, truncatedSongTitle, originalUUID, extension)
     else:
-        newFilename = "%s-%s-%s-DoD%s.%s" % (artistNames, gameNames, songTitle, originalUUID, extension)
+        newFilename = "%s-%s-%s-DoD%s.%s" % (truncatedArtistNames, truncatedGameNames, truncatedSongTitle, originalUUID, extension)
 
     newFilename = "".join(x for x in newFilename if x.isalnum() or x in "._- ,!")
 
