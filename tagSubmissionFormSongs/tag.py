@@ -73,7 +73,7 @@ for filename in fileDirectoryListing:
     splitFilename = filename.split(".")
     uuid = splitFilename[0]
 
-    jsonData = json.loads(open(fileDirectory + '/' + filename, 'r').read())
+    jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
 
     # get all the names and stuff
     songTitle = jsonData['songTitle']
