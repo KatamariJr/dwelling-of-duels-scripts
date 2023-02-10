@@ -4,6 +4,9 @@ import shutil
 import eyed3
 
 
+MAX_TOTAL_FILENAME_LENGTH = 220
+MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
+
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
     extension = ""
     originalUUID = ""
@@ -15,16 +18,28 @@ def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str,
 
     # check maximum lengths for names for filename
     truncatedArtistNames = artistNames
-    if len(artistNames) > 50:
-        truncatedArtistNames = artistNames[:50]
-
     truncatedGameNames = gameNames
-    if len(gameNames) > 50:
-        truncatedGameNames = gameNames[:50]
-
     truncatedSongTitle = songTitle
-    if len(songTitle) > 150:
-        truncatedSongTitle = songTitle[:150]
+    if len(artistNames) + len(gameNames) + len(songTitle) > MAX_TOTAL_FILENAME_LENGTH:
+        remainingCharacters = MAX_TOTAL_FILENAME_LENGTH
+        if len(artistNames) > remainingCharacters:
+            truncatedArtistNames = artistNames[:remainingCharacters]
+            remainingCharacters = MINIMUM_CHARACTERS_PER_FILENAME_FIELD
+        else:
+            remainingCharacters -= len(artistNames)
+
+        if len(gameNames) > remainingCharacters:
+            truncatedGameNames = gameNames[:remainingCharacters]
+            remainingCharacters = MINIMUM_CHARACTERS_PER_FILENAME_FIELD
+        else:
+            remainingCharacters -= len(gameNames)
+
+        if len(songTitle) > remainingCharacters:
+            truncatedSongTitle = songTitle[:remainingCharacters]
+            remainingCharacters = MINIMUM_CHARACTERS_PER_FILENAME_FIELD
+        else:
+            remainingCharacters -= len(songTitle)
+
 
     if isAlt:
         newFilename = "ZZ-%s-%s-%s-DoD%s.%s" % (truncatedArtistNames, truncatedGameNames, truncatedSongTitle, originalUUID, extension)
