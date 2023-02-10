@@ -17,7 +17,7 @@ for filename in fileDirectoryListing:
     if (uuid + '.mp3') not in fileDirectoryListing:
         print("MISSING MP3 FILE FOR UPLOAD")
 
-    jsonData = json.loads(open(fileDirectory + '/' + filename, 'r').read())
+    jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
 
     # get all the names and stuff
     songTitle = jsonData['songTitle']
