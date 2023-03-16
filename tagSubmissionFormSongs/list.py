@@ -1,23 +1,26 @@
 #!/usr/bin/env python
-
+import csv
 import json
 import os
 
-
 fileDirectory = "./files"
-
 
 fileDirectoryListing = os.listdir(fileDirectory)
 
+outputCSV = open("list.csv", 'w')
+
+wr = csv.writer(outputCSV)
+wr.writerow(["submitTime", "filename", "submitter", "songTitle", "artistNames", "gameNames", "isAlt", "comments", "lyrics", "problem"])
 
 for filename in fileDirectoryListing:
     if "json" not in filename:
         continue
     splitFilename = filename.split(".")
     uuid = splitFilename[0]
+    problem = ''
 
     if (uuid + '.mp3') not in fileDirectoryListing:
-        print("MISSING MP3 FILE FOR UPLOAD")
+        problem = "MISSING MP3 FILE FOR UPLOAD"
 
     jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
 
@@ -26,13 +29,18 @@ for filename in fileDirectoryListing:
     artistNames = jsonData['artistNames']
     gameNames = jsonData['gameNames']
     submitter = jsonData['submitterEmail']
+    submissionTime = jsonData['submissionTime']
     if 'comments' in jsonData:
         comments = jsonData['comments']
     else:
         comments = ''
+    if 'lyrics' in jsonData:
+        lyrics = jsonData['lyrics']
+    else:
+        lyrics = ''
     isAlt = jsonData['isAlt'] == "true"
 
-    print('Filename: %s\nTitle: %s\nArtists: %s\nGames: %s\nIsAlt: %s\nSubmitter: %s\nComments: %s\n' % (filename, songTitle, artistNames, gameNames, isAlt, submitter, comments))
+    wr.writerow([submissionTime, filename, submitter, songTitle, artistNames, gameNames, isAlt, comments, lyrics, problem])
 
-    input("Enter for next file")
-    print('\n\n')
+
+outputCSV.close()
