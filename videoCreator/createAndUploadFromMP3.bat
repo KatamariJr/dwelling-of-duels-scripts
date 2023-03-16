@@ -1,6 +1,7 @@
 xcopy .\copySongsHere\*.mp3 .\makeVideo /Y
 
 xcopy .\copySongsHere\*.jpg .\makeVideo /Y
+xcopy .\copySongsHere\*.png .\makeVideo /Y
 
 type .\copySongsHere\uploadSettings.txt
 
