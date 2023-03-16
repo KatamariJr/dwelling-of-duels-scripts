@@ -1,10 +1,12 @@
+#!/usr/bin/env python
+
 import json
 import os
 import shutil
 import eyed3
 
 
-MAX_TOTAL_FILENAME_LENGTH = 220
+MAX_TOTAL_FILENAME_LENGTH = 200
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
 
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
@@ -79,7 +81,7 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
 
 fileDirectory = "./files"
 
-albumName = "DoD-23-01: Testing Theme"
+albumName = "DoD23-02: Mario Redux"
 
 fileDirectoryListing = os.listdir(fileDirectory)
 
