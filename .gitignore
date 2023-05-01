@@ -7,7 +7,6 @@
 __pycache__/
 *-oauth2.json
 client_secrets.json
-voting/
 *\uploadSettings.txt
 uploadedIDs_old.txt
 uploadedIDs.txt
@@ -21,4 +20,7 @@ renameArtist/.idea/modules.xml
 renameArtist/.idea/renameArtist.iml
 renameArtist/.idea/vcs.xml
 **/.idea/
-/votes/votes.txt
+/tagSubmissionFormSongs/list.csv
+/tagSubmissionFormSongs/lyrics.txt
+/votingSource/votes.txt
+/voting/votes.txt
