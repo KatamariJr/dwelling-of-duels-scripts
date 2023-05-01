@@ -23,7 +23,7 @@ for filename in fileDirectoryListing:
 
     # get all the names and stuff
     votes = jsonData['votes']
-    submitter = jsonData['submitterEmail']
+    submitter = jsonData['submitterEmail'] + ' ' + jsonData['submissionTime'] + ' '+ uuid
 
     outputText += '%s\n\n%s\n\n' % (submitter, votes)
 
