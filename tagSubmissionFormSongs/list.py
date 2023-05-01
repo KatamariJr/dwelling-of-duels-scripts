@@ -7,6 +7,8 @@ fileDirectory = "./files"
 
 fileDirectoryListing = os.listdir(fileDirectory)
 
+lyricsFile = open("lyrics.txt", 'w')
+
 outputCSV = open("list.csv", 'w')
 
 wr = csv.writer(outputCSV)
@@ -36,6 +38,8 @@ for filename in fileDirectoryListing:
         comments = ''
     if 'lyrics' in jsonData:
         lyrics = jsonData['lyrics']
+        if lyrics != "":
+            lyricsFile.write("%s\n\n%s\n\n\n\n\n" % (songTitle, lyrics))
     else:
         lyrics = ''
     isAlt = jsonData['isAlt'] == "true"
@@ -44,3 +48,4 @@ for filename in fileDirectoryListing:
 
 
 outputCSV.close()
+lyricsFile.close()
