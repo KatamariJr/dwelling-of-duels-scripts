@@ -6,8 +6,9 @@ import shutil
 import eyed3
 
 
-MAX_TOTAL_FILENAME_LENGTH = 200
+MAX_TOTAL_FILENAME_LENGTH = 180
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
+ALBUM_NAME = "DoD23-05: Playstation 2"
 
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
     extension = ""
@@ -81,8 +82,6 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
 
 fileDirectory = "./files"
 
-albumName = "DoD23-02: Mario Redux"
-
 fileDirectoryListing = os.listdir(fileDirectory)
 
 if "newSongs" not in fileDirectoryListing:
@@ -112,9 +111,9 @@ for filename in fileDirectoryListing:
     isAlt = jsonData['isAlt'] == "true"
 
     # create file for non-anonymized
-    renameAndCopy(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
-    renameAndCopy(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
+    renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
+    renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
 
     # create file for anonymized
-    renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
+    renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
 
