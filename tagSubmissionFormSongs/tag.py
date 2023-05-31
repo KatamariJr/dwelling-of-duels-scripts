@@ -73,7 +73,11 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
     audiofile.tag.album = albumName
     audiofile.tag.recording_date = YEAR
     audiofile.tag.comments.set('www.dwellingofduels.net')
-    imageBytes = open(coverImageFilename, 'rb').read()
+    imageBytes = None
+    try:
+        imageBytes = open(coverImageFilename, 'rb').read()
+    except:
+        print("Missing jpg for cover image in this folder!")
     audiofile.tag.images.set(3, imageBytes, 'image/jpeg')
     if isAlt:
         audiofile.tag.track_num = 99
@@ -92,7 +96,7 @@ if "newSongsAnon" not in fileDirectoryListing:
 
 coverImage = ""
 for filename in fileDirectoryListing:
-    if "jpg" not in filename:
+    if "jpg" not in filename.lower():
         continue
     coverImage = fileDirectory + '/' + filename
     break
@@ -118,3 +122,4 @@ for filename in fileDirectoryListing:
     # create file for anonymized
     renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
 
+print("Done\n")
