@@ -9,14 +9,15 @@ import eyed3
 MAX_TOTAL_FILENAME_LENGTH = 180
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
 ALBUM_NAME = "DoD23-05: Playstation 2"
+YEAR = "2023"
 
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
     extension = ""
     originalUUID = ""
-    if "json" in srcFile:
+    if "json" in srcFile.lower():
         extension = "json"
         originalUUID = "-" + srcFile[8:-5]
-    elif "mp3" in srcFile:
+    elif "mp3" in srcFile.lower():
         extension = "mp3"
 
     # check maximum lengths for names for filename
@@ -70,7 +71,7 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
     audiofile.tag.non_std_genre = gameNames
     audiofile.tag.title = songTitle
     audiofile.tag.album = albumName
-    audiofile.tag.recording_date = "2023"
+    audiofile.tag.recording_date = YEAR
     audiofile.tag.comments.set('www.dwellingofduels.net')
     imageBytes = open(coverImageFilename, 'rb').read()
     audiofile.tag.images.set(3, imageBytes, 'image/jpeg')
