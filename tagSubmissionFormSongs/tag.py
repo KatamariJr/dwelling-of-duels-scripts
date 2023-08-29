@@ -8,7 +8,7 @@ import eyed3
 
 MAX_TOTAL_FILENAME_LENGTH = 180
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
-ALBUM_NAME = "DoD23-05: Playstation 2"
+ALBUM_NAME = "DoD23-08: Hitoshi Sakimoto"
 YEAR = "2023"
 
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
