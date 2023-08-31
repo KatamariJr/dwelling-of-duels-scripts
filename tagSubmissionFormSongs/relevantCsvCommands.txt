@@ -1,0 +1,2 @@
+# songs in order of submission, minus lyrics
+ csvcut -c 1,2,3,4,5,6,7,8,10 songs.csv | csvsort -c 1 | csvlook | less -S
