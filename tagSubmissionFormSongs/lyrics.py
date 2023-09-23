@@ -7,6 +7,7 @@ fileDirectory = "./files"
 fileDirectoryListing = os.listdir(fileDirectory)
 
 outputLyricsTxt = open(fileDirectory + "/newSongs/lyrics.txt", 'w')
+outputLyricsAnonTxt = open(fileDirectory + "/newSongsAnon/lyrics.txt", 'w')
 
 
 for filename in fileDirectoryListing:
@@ -30,6 +31,8 @@ for filename in fileDirectoryListing:
         continue
 
     outputLyricsTxt.write("%s\n\n%s\n\n\n\n" % (songTitle, lyrics))
+    outputLyricsAnonTxt.write("%s\n\n%s\n\n\n\n" % (songTitle, lyrics))
 
 
 outputLyricsTxt.close()
+outputLyricsAnonTxt.close()

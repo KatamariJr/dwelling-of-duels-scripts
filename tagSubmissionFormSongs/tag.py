@@ -6,16 +6,18 @@ import shutil
 import eyed3
 
 
-MAX_TOTAL_FILENAME_LENGTH = 200
+MAX_TOTAL_FILENAME_LENGTH = 180
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
+ALBUM_NAME = "DoD23-08: Hitoshi Sakimoto"
+YEAR = "2023"
 
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
     extension = ""
     originalUUID = ""
-    if "json" in srcFile:
+    if "json" in srcFile.lower():
         extension = "json"
         originalUUID = "-" + srcFile[8:-5]
-    elif "mp3" in srcFile:
+    elif "mp3" in srcFile.lower():
         extension = "mp3"
 
     # check maximum lengths for names for filename
@@ -69,9 +71,13 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
     audiofile.tag.non_std_genre = gameNames
     audiofile.tag.title = songTitle
     audiofile.tag.album = albumName
-    audiofile.tag.recording_date = "2023"
+    audiofile.tag.recording_date = YEAR
     audiofile.tag.comments.set('www.dwellingofduels.net')
-    imageBytes = open(coverImageFilename, 'rb').read()
+    imageBytes = None
+    try:
+        imageBytes = open(coverImageFilename, 'rb').read()
+    except:
+        print("Missing jpg for cover image in this folder!")
     audiofile.tag.images.set(3, imageBytes, 'image/jpeg')
     if isAlt:
         audiofile.tag.track_num = 99
@@ -80,8 +86,6 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
 
 
 fileDirectory = "./files"
-
-albumName = "DoD23-02: Mario Redux"
 
 fileDirectoryListing = os.listdir(fileDirectory)
 
@@ -92,7 +96,7 @@ if "newSongsAnon" not in fileDirectoryListing:
 
 coverImage = ""
 for filename in fileDirectoryListing:
-    if "jpg" not in filename:
+    if "jpg" not in filename.lower():
         continue
     coverImage = fileDirectory + '/' + filename
     break
@@ -112,9 +116,10 @@ for filename in fileDirectoryListing:
     isAlt = jsonData['isAlt'] == "true"
 
     # create file for non-anonymized
-    renameAndCopy(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
-    renameAndCopy(isAlt, artistNames, gameNames, songTitle, albumName, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
+    renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
+    renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
 
     # create file for anonymized
-    renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, albumName, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
+    renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
 
+print("Done\n")

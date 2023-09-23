@@ -20,7 +20,9 @@ renameArtist/.idea/modules.xml
 renameArtist/.idea/renameArtist.iml
 renameArtist/.idea/vcs.xml
 **/.idea/
-/tagSubmissionFormSongs/list.csv
-/tagSubmissionFormSongs/lyrics.txt
+/tagSubmissionFormSongs/songs.csv
+/tagSubmissionFormSongs/**/lyrics.txt
+/tagSubmissionFormSongs/**/*.json
+/tagSubmissionFormSongs/**/*.mp3
 /votingSource/votes.txt
 /voting/votes.txt
