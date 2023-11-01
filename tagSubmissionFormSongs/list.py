@@ -22,7 +22,11 @@ for filename in fileDirectoryListing:
     if (uuid + '.mp3') not in fileDirectoryListing:
         problem = "MISSING MP3 FILE FOR UPLOAD"
 
-    jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
+    try:
+        jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
+    except Exception as e:
+        print("error reading file " + filename + ": ", e)
+        quit(1)
 
     # get all the names and stuff
     songTitle = jsonData['songTitle']
