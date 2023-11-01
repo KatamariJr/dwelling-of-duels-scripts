@@ -8,7 +8,7 @@ import eyed3
 
 MAX_TOTAL_FILENAME_LENGTH = 180
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
-ALBUM_NAME = "DoD23-08: Hitoshi Sakimoto"
+ALBUM_NAME = "DoD23-10: Horror Games"
 YEAR = "2023"
 
 def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
@@ -107,7 +107,10 @@ for filename in fileDirectoryListing:
     splitFilename = filename.split(".")
     uuid = splitFilename[0]
 
-    jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
+    try:
+        jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
+    except Exception as e:
+        print("error reading file " + filename + ": " + e)
 
     # get all the names and stuff
     songTitle = jsonData['songTitle']
