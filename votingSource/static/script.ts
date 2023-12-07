@@ -18,6 +18,7 @@ type votesSubmissions = {
 }[]
 
 let voteSubmissionData: votesSubmissions;
+let checkedIndexes: number[] = [];
 
 async function fetchVoteSubmissions() {
     try {
@@ -54,6 +55,13 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
         checkBox.id = String(i);
         checkBox.checked = true;
         checkBox.addEventListener("click", () => {
+            if (checkedIndexes.includes(i)){
+                checkedIndexes = checkedIndexes.filter((v) => {
+                    return v != i;
+                })
+            } else {
+                checkedIndexes.push(i)
+            }
             postVoteSubmissionsToGetResults();
         })
         voteRow.append(checkBox);
@@ -70,53 +78,16 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
 
 async function postVoteSubmissionsToGetResults() {
     let jsonData: resultData;
-    console.debug("clicked???")
 
     const leftTextArea = <HTMLTextAreaElement>document.getElementById('leftTextArea')
-    let dataToSave = [
-        "bob",
-        "Baba Is You - Rocket Is Dust / good +0.16\n" +
-        "Batman [NES] - Punch Punch / good -0.38\n" +
-        "Blazing Chrome - Time to Blaze / good +0.38\n" +
-        "Chrono Trigger - The Secret of the Forest / good +0.03\n" +
-        "Contra 3: The Alien Wars, Contra 4 - Let's attack aBRASSively! / incredible -0.29\n" +
-        "Environmental Station Alpha - 6-bit / average -0.47\n" +
-        "Final Fantasy 5, Final Fantasy 6, Final Fantasy 7 - Let The Decisive Battle On The Big Bridge Begin! / incredible -0.26\n" +
-        "Fire Emblem: Three Houses - God Shattering Star / incredible +0.00\n" +
-        "Mega Man 6 - templant man / average -0.46\n" +
-        "Metal Slug - Starry Cinnamon Skies / good -0.43\n" +
-        "NieR: Automata - Milonga del Carnaval de las Máquinas Tristes (Milonga from the Carnival of the Sad Machines) / above average +0.12\n" +
-        "Ninja Gaiden, Ninja Gaiden II: The Dark Sword of Chaos, Ninja Gaiden III: The Ancient Ship of Doom - Ninja Gaiden Trilogy / my song\n" +
-        "Pac-Man 2: The New Adventures - Pac-Man 2: 1 Guitar / above average -0.29\n" +
-        "Pictionary - Pictiognarly: Shred the Wet / above average +0.09\n" +
-        "Pokemon Ruby/Sapphire - My Body Is Regi / below average +0.31\n" +
-        "Punch-Out!! - Finished with Mike Tyson / below average +0.13\n" +
-        "Resident Evil 4 - SAVE LEON K / below average -0.08\n" +
-        "Terranigma - Sleepy Seaport / average -0.33\n" +
-        "Undertale, Touhou 4: Lotus Land Story - That's Bullet Hell You're Walking Into / above average +0.16\n" +
-        "Ys 6: The Ark of Napishtim - Ocean SpraYs / above average +0.28",
-        "tibone",
-        "Baba Is You - Rocket Is Dust / above average +0.00\n" +
-        "Batman [NES] - Punch Punch / good +0.01\n" +
-        "Blazing Chrome - Time to Blaze / incredible +0.00\n" +
-        "Chrono Trigger - The Secret of the Forest / incredible -0.49\n" +
-        "Contra 3: The Alien Wars, Contra 4 - Let's attack aBRASSively! / good +0.01\n" +
-        "Environmental Station Alpha - 6-bit / average +0.42\n" +
-        "Final Fantasy 5, Final Fantasy 6, Final Fantasy 7 - Let The Decisive Battle On The Big Bridge Begin! / good +0.38\n" +
-        "Fire Emblem: Three Houses - God Shattering Star / incredible +0.00\n" +
-        "Mega Man 6 - templant man / my song\n" +
-        "Metal Slug - Starry Cinnamon Skies / good -0.01\n" +
-        "NieR: Automata - Milonga del Carnaval de las Máquinas Tristes (Milonga from the Carnival of the Sad Machines) / average +0.00\n" +
-        "Ninja Gaiden, Ninja Gaiden II: The Dark Sword of Chaos, Ninja Gaiden III: The Ancient Ship of Doom - Ninja Gaiden Trilogy / above average +0.49\n" +
-        "Pac-Man 2: The New Adventures - Pac-Man 2: 1 Guitar / good +0.15\n" +
-        "Pictionary - Pictiognarly: Shred the Wet / average +0.00\n" +
-        "Pokemon Ruby/Sapphire - My Body Is Regi / average +0.00\n" +
-        "Punch-Out!! - Finished with Mike Tyson / below average +0.01\n" +
-        "Resident Evil 4 - SAVE LEON K / average +0.00\n" +
-        "Terranigma - Sleepy Seaport / average +0.00\n" +
-        "Undertale, Touhou 4: Lotus Land Story - That's Bullet Hell You're Walking Into / good +0.02\n" +
-        "Ys 6: The Ark of Napishtim - Ocean SpraYs / good +0.42"
-    ];
+
+    let dataToSave = voteSubmissionData.flatMap((value, index) => {
+        //if this row is checked, dont include it
+        if (checkedIndexes.includes(index)) {
+            return [];
+        }
+        return [value.voter, value.votes]
+    })
 
     try {
         const response = await fetch('/process', {
