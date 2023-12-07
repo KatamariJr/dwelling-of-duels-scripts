@@ -2,7 +2,6 @@ import numpy as np
 from scipy import stats
 from typing import TypedDict, List
 
-#TODO does everything except handle reviewed values. also the numbers are a teensy bit off, probably because reviews arent being handled
 
 class SongVoteData:
     voter: str
@@ -23,11 +22,11 @@ theData = open('votes.txt', 'r').read()
 dataArray = theData.split("\n\n")
 
 # populate the list of songs from the list in the first vote block
-songs = []  # todo rename to songNames
+songNames = []
 songsCondensed = []
 for i in dataArray[1].split("\n"):
     songTitle = i.split(" / ")[0]
-    songs.append(songTitle)
+    songNames.append(songTitle)
     songsCondensed.append(''.join(songTitle.lower().split(" ")))
 ratingNames = ["terrible", "bad", "below", "average", "above", "good", "incredible", "my"]
 ratingNamesFull = ["terrible", "bad", "below average", "average", "above average", "good", "incredible"]
@@ -42,7 +41,7 @@ for i in range(0, len(dataArray), 2):
     if len(voter.split("(reviewed)")) > 1:
         reviewed = True
     # turn the word rating into a number and add it to a list
-    scores = np.empty(len(songs))
+    scores = np.empty(len(songNames))
     for j in dataArray[i + 1].split("\n"):
         line = j.strip().split(" / ")
         songName = ''.join(line[0].lower().split(" "))
@@ -60,7 +59,7 @@ for i in range(0, len(dataArray), 2):
     theResults.append(SongVoteData(voter, scores, reviewed))
 
 # get the averages for the data (aka averages())
-averagesTotal = np.average([res.scores for res in theResults], axis=0) # todo rename this to something else since it isnt a total, its a list
+averagesList = np.average([res.scores for res in theResults], axis=0)
 
 # get the averages z scores for the data (aka averagedZscores())
 listOfListOfVotes = []
@@ -76,14 +75,14 @@ averagedZScoresTotal = np.average(finalZScores, axis=0)
 
 #do things aka calculateResults()
 theArray = averagedZScoresTotal
-finals = np.argsort(theArray)[::-1] # flips the order so highest is first
+finals = np.argsort(theArray)[::-1]  # flips the order so highest is first
 
 print(finals)
-print(averagesTotal)
+print(averagesList)
 print(theArray)
 
-highScore = averagesTotal[finals[0]]
-lowScore = averagesTotal[finals[-1]]
+highScore = averagesList[finals[0]]
+lowScore = averagesList[finals[-1]]
 zHigh = theArray[finals[0]]
 zLow = theArray[finals[-1]]
 
@@ -110,10 +109,11 @@ for k in range(0, len(finals)):
         operand = "-"
     adj = np.abs(np.floor(adj * 100)/100)
 
+    #todo - used for color coding
     #percentage = (theArray[finals[k]] - zLow) / (zHigh - zLow)
 
     #print(pulledScore, roundedScore, songs[finals[k]])
-    print(f"#{num+1} Artist - {songs[finals[k]]} - {ratingNamesFull[roundedScore]} {operand}{adj}")
+    print(f"#{num+1} Artist - {songNames[finals[k]]} - {ratingNamesFull[roundedScore]} {operand}{adj}")
 print(f"Voters: {len(theResults)}")
 
 
