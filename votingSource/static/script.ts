@@ -50,6 +50,10 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
     data.forEach((v,i) => {
         let voteRow = document.createElement("div");
 
+        let voter = document.createElement("label");
+        voter.setAttribute("for", String(i));
+        voter.textContent = `${v.voter} : [votes here]`;
+
         let checkBox = document.createElement("input");
         checkBox.type = "checkbox";
         checkBox.id = String(i);
@@ -59,16 +63,15 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
                 checkedIndexes = checkedIndexes.filter((v) => {
                     return v != i;
                 })
+                voter.classList.remove("strike")
             } else {
                 checkedIndexes.push(i)
+                voter.classList.add("strike")
             }
             postVoteSubmissionsToGetResults();
         })
         voteRow.append(checkBox);
 
-        let voter = document.createElement("label");
-        voter.setAttribute("for", String(i));
-        voter.textContent = `${v.voter} : [votes here]`;
         voteRow.append(voter);
 
         containingDiv.appendChild(voteRow);

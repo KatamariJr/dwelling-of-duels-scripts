@@ -29,3 +29,7 @@ body {
     display: grid;
     grid-template-columns: auto;
 }
+
+.strike {
+    text-decoration: line-through;
+}
