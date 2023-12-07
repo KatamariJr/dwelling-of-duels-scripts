@@ -14,8 +14,9 @@ type resultData = {
 }
 
 type votesSubmissions = {
-   votes: string
-   voter: string
+    votes: string
+    voter: string
+    deviance: number
 }[]
 
 let voteSubmissionData: votesSubmissions;
@@ -37,6 +38,18 @@ async function fetchVoteSubmissions() {
 
 // Function to create and display table rows from JSON data
 function displayVoteResults(textArea :HTMLTextAreaElement, data: resultData) {
+    //update voteSubmission table with deviant info
+    data.deviants.forEach((deviant) => {
+        for (let vsd of voteSubmissionData) {
+            if (vsd.voter === deviant.voter) {
+                vsd.deviance = deviant.deviance;
+                break;
+            }
+        }
+    })
+    const rightGrid = <HTMLDivElement>document.getElementById('rightGrid')
+    displayVoteSubmissions(rightGrid, voteSubmissionData);
+
     let s = "";
 
     data.results.forEach((item, index) => {
@@ -57,21 +70,22 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
 
         let voter = document.createElement("label");
         voter.setAttribute("for", String(i));
-        voter.textContent = `${v.voter} : [votes here]`;
+        voter.textContent = `${v.voter} : [votes here]   deviance: ${v.deviance}`;
 
         let disableCheckBox = document.createElement("input");
         disableCheckBox.type = "checkbox";
         disableCheckBox.id = String(i);
-        disableCheckBox.checked = true;
+        if (disabledCheckedIndexes.includes(i)) {
+            voter.classList.add("strike")
+        }
+        disableCheckBox.checked = !disabledCheckedIndexes.includes(i);
         disableCheckBox.addEventListener("change", () => {
             if (disabledCheckedIndexes.includes(i)){
                 disabledCheckedIndexes = disabledCheckedIndexes.filter((v) => {
                     return v != i;
                 })
-                voter.classList.remove("strike")
             } else {
                 disabledCheckedIndexes.push(i)
-                voter.classList.add("strike")
             }
             postVoteSubmissionsToGetResults();
         })
@@ -79,7 +93,10 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
 
         let reviewedCheckBox = document.createElement("input")
         reviewedCheckBox.type = "checkbox";
-        reviewedCheckBox.checked = false;
+        if (reviewedCheckedIndexes.includes(i)) {
+            voter.classList.add("highlight")
+        }
+        reviewedCheckBox.checked = reviewedCheckedIndexes.includes(i);
         reviewedCheckBox.addEventListener("change", () => {
             if (reviewedCheckedIndexes.includes(i)){
                 reviewedCheckedIndexes = reviewedCheckedIndexes.filter((v) => {
@@ -87,7 +104,6 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
                 })
             } else {
                 reviewedCheckedIndexes.push(i)
-                voter.classList.add("highlight")
             }
             postVoteSubmissionsToGetResults();
         })
