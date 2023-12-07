@@ -1,13 +1,26 @@
 #left {
-    background-color: blue;
-    width: 48%;
+    background-color: darkgreen;
+    width: 100%;
     margin: 0;
     padding: 0;
+    left: 0;
 }
 
 #right {
-    background-color: pink;
-    width: 22%;
+    background-color: darkgoldenrod;
+    width: 100%;
     margin: 0;
     padding: 0;
+    right: 0;
+}
+
+body {
+    display: grid;
+    grid-template-rows: 10px auto;
+    grid-template-columns: 1fr 1fr;
+}
+
+#leftTextArea {
+    width: 100%;
+    height: auto;
 }
