@@ -33,3 +33,7 @@ body {
 .strike {
     text-decoration: line-through;
 }
+
+.highlight {
+    background-color: silver;
+}

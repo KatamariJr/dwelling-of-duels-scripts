@@ -18,7 +18,8 @@ type votesSubmissions = {
 }[]
 
 let voteSubmissionData: votesSubmissions;
-let checkedIndexes: number[] = [];
+let disabledCheckedIndexes: number[] = [];
+let reviewedCheckedIndexes: number[] = [];
 
 async function fetchVoteSubmissions() {
     try {
@@ -30,6 +31,7 @@ async function fetchVoteSubmissions() {
 
     const rightGrid = <HTMLDivElement>document.getElementById('rightGrid')
     displayVoteSubmissions(rightGrid, voteSubmissionData);
+    postVoteSubmissionsToGetResults()
 }
 
 // Function to create and display table rows from JSON data
@@ -54,23 +56,39 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
         voter.setAttribute("for", String(i));
         voter.textContent = `${v.voter} : [votes here]`;
 
-        let checkBox = document.createElement("input");
-        checkBox.type = "checkbox";
-        checkBox.id = String(i);
-        checkBox.checked = true;
-        checkBox.addEventListener("click", () => {
-            if (checkedIndexes.includes(i)){
-                checkedIndexes = checkedIndexes.filter((v) => {
+        let disableCheckBox = document.createElement("input");
+        disableCheckBox.type = "checkbox";
+        disableCheckBox.id = String(i);
+        disableCheckBox.checked = true;
+        disableCheckBox.addEventListener("change", () => {
+            if (disabledCheckedIndexes.includes(i)){
+                disabledCheckedIndexes = disabledCheckedIndexes.filter((v) => {
                     return v != i;
                 })
                 voter.classList.remove("strike")
             } else {
-                checkedIndexes.push(i)
+                disabledCheckedIndexes.push(i)
                 voter.classList.add("strike")
             }
             postVoteSubmissionsToGetResults();
         })
-        voteRow.append(checkBox);
+        voteRow.append(disableCheckBox);
+
+        let reviewedCheckBox = document.createElement("input")
+        reviewedCheckBox.type = "checkbox";
+        reviewedCheckBox.checked = false;
+        reviewedCheckBox.addEventListener("change", () => {
+            if (reviewedCheckedIndexes.includes(i)){
+                reviewedCheckedIndexes = reviewedCheckedIndexes.filter((v) => {
+                    return v != i;
+                })
+            } else {
+                reviewedCheckedIndexes.push(i)
+                voter.classList.add("highlight")
+            }
+            postVoteSubmissionsToGetResults();
+        })
+        voteRow.append(reviewedCheckBox);
 
         voteRow.append(voter);
 
@@ -86,8 +104,11 @@ async function postVoteSubmissionsToGetResults() {
 
     let dataToSave = voteSubmissionData.flatMap((value, index) => {
         //if this row is checked, dont include it
-        if (checkedIndexes.includes(index)) {
+        if (disabledCheckedIndexes.includes(index)) {
             return [];
+        }
+        if (reviewedCheckedIndexes.includes(index)) {
+            return [value.voter + " (reviewed)", value.votes]
         }
         return [value.voter, value.votes]
     })
@@ -102,7 +123,7 @@ async function postVoteSubmissionsToGetResults() {
         });
 
         if (response.ok) {
-            console.log('Data saved successfully!');
+            console.log('Votes processed successfully!');
             jsonData = await response.json();
             displayVoteResults(leftTextArea, jsonData);
         } else {

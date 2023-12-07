@@ -389,7 +389,7 @@ Terranigma - Sleepy Seaport / above average -0.32
 Undertale, Touhou 4: Lotus Land Story - That's Bullet Hell You're Walking Into / above average +0.10
 Ys 6: The Ark of Napishtim - Ocean SpraYs / above average +0.27 
 
-hakstock (reviewed)
+hakstock
 
 Baba Is You - Rocket Is Dust / above average +0.00
 Batman [NES] - Punch Punch / above average -0.08
