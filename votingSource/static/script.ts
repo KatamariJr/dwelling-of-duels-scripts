@@ -6,6 +6,7 @@ type resultData = {
         operand: string
         adjustment: number
     }[]
+    voterCount: number
     deviants: {
        voter: string
        deviance: number
@@ -41,6 +42,8 @@ function displayVoteResults(textArea :HTMLTextAreaElement, data: resultData) {
     data.results.forEach((item, index) => {
         s = s.concat(`#${index+1} Artist - ${item.songTitle} - ${item.rating} ${item.operand}${item.adjustment}\n`)
     });
+
+    s += `\nVoters: ${data.voterCount}`
 
     textArea.rows = data.results.length + 5;
     textArea.textContent = s;

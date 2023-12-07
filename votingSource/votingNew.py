@@ -142,7 +142,7 @@ def processVoteData(dataArray: list[str]):
     for i in range(len(finalZScores)):
         returningDeviantList.append({"voter": theResults[ia[i]].voter, "deviance": np.round(devTotals[ia[i]] * 100) / 100})
 
-    return {"results": returningVoteList, "deviants": returningDeviantList}
+    return {"results": returningVoteList, "deviants": returningDeviantList, "voterCount": len(dataArray)/2}
 
 # @app.get("/")
 # def indexRoute():
