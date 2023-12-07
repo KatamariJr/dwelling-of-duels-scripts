@@ -60,8 +60,8 @@ def processVoteData(dataArray: list[str]):
 
     # get the averages z scores for the data (aka averagedZscores())
     listOfListOfVotes = []
-    for r in theResults:
-        listOfListOfVotes.append(r.scores)
+    for returningVoteList in theResults:
+        listOfListOfVotes.append(returningVoteList.scores)
 
     finalZScores = stats.zscore([res.scores for res in theResults], axis=1)
     for i in range(len(theResults)):
@@ -91,9 +91,11 @@ def processVoteData(dataArray: list[str]):
     subtracter = zLow
     adder = lowScore
 
+    returningVoteList = []
+
     for k in range(0, len(finals)):
         if k > 0:
-            if (theArray[finals[k]] != theArray[finals[k-1]]):
+            if theArray[finals[k]] != theArray[finals[k - 1]]:
                 num = k
         else:
             num = k
@@ -110,9 +112,10 @@ def processVoteData(dataArray: list[str]):
         #percentage = (theArray[finals[k]] - zLow) / (zHigh - zLow)
 
         #print(pulledScore, roundedScore, songs[finals[k]])
-        print(f"#{num+1} Artist - {songNames[finals[k]]} - {ratingNamesFull[roundedScore]} {operand}{adj}")
+        returningVoteList.append((num+1, songNames[finals[k]], ratingNamesFull[roundedScore], operand, adj))
     print(f"Voters: {len(theResults)}")
 
+    returningDeviantList = []
 
     #aka findDeviants()
     devTotals = []
@@ -131,10 +134,18 @@ def processVoteData(dataArray: list[str]):
 
     ia = np.argsort(devTotals)[::-1]
     for i in range(len(finalZScores)):
-        print(f"{theResults[ia[i]].voter}: {np.round(devTotals[ia[i]] * 100) / 100}")
+        returningDeviantList.append((theResults[ia[i]].voter, np.round(devTotals[ia[i]] * 100) / 100))
+
+    return returningVoteList, returningDeviantList
+
 
 theData = open('votes.txt', 'r').read()
 # split the text file by double carriage return
 dataArray = theData.split("\n\n")
 
-processVoteData(dataArray)
+voteDataResults = processVoteData(dataArray)
+for vdr in voteDataResults[0]:
+    print(f"#{vdr[0]} Artist - {vdr[1]} - {vdr[2]} {vdr[3]}{vdr[4]}")
+
+for bar in voteDataResults[1]:
+    print(f"{bar[0]}: {bar[1]}")
