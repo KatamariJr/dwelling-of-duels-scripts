@@ -1,7 +1,9 @@
 import numpy as np
 from scipy import stats
 from typing import TypedDict, List
+from fastapi import FastAPI
 
+app = FastAPI()
 
 class SongVoteData:
     voter: str
@@ -15,7 +17,6 @@ class SongVoteData:
 
     def __str__(self):
         return f"{self.voter} {self.reviewed} {self.scores}"
-
 
 def processVoteData(dataArray: list[str]):
     # populate the list of songs from the list in the first vote block
@@ -112,7 +113,7 @@ def processVoteData(dataArray: list[str]):
         #percentage = (theArray[finals[k]] - zLow) / (zHigh - zLow)
 
         #print(pulledScore, roundedScore, songs[finals[k]])
-        returningVoteList.append((num+1, songNames[finals[k]], ratingNamesFull[roundedScore], operand, adj))
+        returningVoteList.append({"place": num+1, "songTitle": songNames[finals[k]], "rating": ratingNamesFull[roundedScore], "operand": operand, "adjustment": adj})
     print(f"Voters: {len(theResults)}")
 
     returningDeviantList = []
@@ -134,18 +135,31 @@ def processVoteData(dataArray: list[str]):
 
     ia = np.argsort(devTotals)[::-1]
     for i in range(len(finalZScores)):
-        returningDeviantList.append((theResults[ia[i]].voter, np.round(devTotals[ia[i]] * 100) / 100))
+        returningDeviantList.append({"voter": theResults[ia[i]].voter, "deviance": np.round(devTotals[ia[i]] * 100) / 100})
 
     return returningVoteList, returningDeviantList
 
+@app.get("/")
+def indexRoute():
+    theData = open('votes.txt', 'r').read()
+    # split the text file by double carriage return
+    dataArray = theData.split("\n\n")
 
-theData = open('votes.txt', 'r').read()
-# split the text file by double carriage return
-dataArray = theData.split("\n\n")
+    voteDataResults = processVoteData(dataArray)
 
-voteDataResults = processVoteData(dataArray)
-for vdr in voteDataResults[0]:
-    print(f"#{vdr[0]} Artist - {vdr[1]} - {vdr[2]} {vdr[3]}{vdr[4]}")
+    return {
+        "results": voteDataResults[0],
+        "deviants": voteDataResults[1]
+    }
 
-for bar in voteDataResults[1]:
-    print(f"{bar[0]}: {bar[1]}")
+def main():
+    theData = open('votes.txt', 'r').read()
+    # split the text file by double carriage return
+    dataArray = theData.split("\n\n")
+
+    voteDataResults = processVoteData(dataArray)
+    for vdr in voteDataResults[0]:
+        print(f"#{vdr[0]} Artist - {vdr[1]} - {vdr[2]} {vdr[3]}{vdr[4]}")
+
+    for bar in voteDataResults[1]:
+        print(f"{bar[0]}: {bar[1]}")
