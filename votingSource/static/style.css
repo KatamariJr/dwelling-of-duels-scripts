@@ -24,3 +24,8 @@ body {
     width: 100%;
     height: auto;
 }
+
+#rightGrid {
+    display: grid;
+    grid-template-columns: auto;
+}

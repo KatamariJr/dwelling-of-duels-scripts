@@ -22,6 +22,7 @@ class SongVoteData:
     def __str__(self):
         return f"{self.voter} {self.reviewed} {self.scores}"
 
+@app.post("/process")
 def processVoteData(dataArray: list[str]):
     # populate the list of songs from the list in the first vote block
     songNames = []
@@ -143,20 +144,20 @@ def processVoteData(dataArray: list[str]):
 
     return returningVoteList, returningDeviantList
 
-@app.get("/")
-def indexRoute():
-    theData = open('votes.txt', 'r').read()
-    # split the text file by double carriage return
-    dataArray = theData.split("\n\n")
+# @app.get("/")
+# def indexRoute():
+#     theData = open('votes.txt', 'r').read()
+#     # split the text file by double carriage return
+#     dataArray = theData.split("\n\n")
+#
+#     voteDataResults = processVoteData(dataArray)
+#
+#     return {
+#         "results": voteDataResults[0],
+#         "deviants": voteDataResults[1]
+#     }
 
-    voteDataResults = processVoteData(dataArray)
-
-    return {
-        "results": voteDataResults[0],
-        "deviants": voteDataResults[1]
-    }
-
-@app.get("/text")
+@app.get("/loadFromFile")
 def indexRoute():
     theData = open('votes.txt', 'r').read()
     # split the text file by double carriage return

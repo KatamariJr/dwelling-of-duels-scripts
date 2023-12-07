@@ -12,22 +12,23 @@ type resultData = {
     }[]
 }
 
+type votesSubmissions = {
+   votes: string
+   voter: string
+}[]
+
 async function fetchVoteData() {
-    let jsonData: resultData;
+    let jsonData: votesSubmissions;
     try {
-        const response = await fetch('/');
-        jsonData = await response.json();
+        const response = await fetch('/loadFromFile');
+        jsonData = (await response.json() as votesSubmissions);
     } catch (error) {
         console.error('Error fetching data:', error);
     }
 
-    const mainTable = <HTMLTableElement>document.getElementById('leftTable');
-    const leftTextArea = <HTMLTextAreaElement>document.getElementById('leftTextArea')
-    displayData(leftTextArea, jsonData);
+    const rightGrid = <HTMLDivElement>document.getElementById('rightGrid')
+    displayVoteSubmissions(rightGrid, jsonData);
 }
-
-const fieldNameList : string[] = [];
-const editableFieldNames: string[] = ["songTitle", "artistNames", "gameNames", "comments", "isAlt", "lyrics"]
 
 function showModal(content) {
     let dialog = document.createElement("dialog");
@@ -49,7 +50,7 @@ function showModal(content) {
 }
 
 // Function to create and display table rows from JSON data
-function displayData(textArea :HTMLTextAreaElement, data: resultData) {
+function displayVoteResults(textArea :HTMLTextAreaElement, data: resultData) {
     let s = "";
 
     data.results.forEach((item, index) => {
@@ -58,6 +59,27 @@ function displayData(textArea :HTMLTextAreaElement, data: resultData) {
 
     textArea.rows = data.results.length + 5;
     textArea.textContent = s;
+}
+
+function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmissions) {
+    containingDiv.replaceChildren();
+
+    data.forEach((v,i) => {
+        let voteRow = document.createElement("div");
+
+        let checkBox = document.createElement("input");
+        checkBox.type = "checkbox";
+        checkBox.checked = true;
+        voteRow.append(checkBox);
+
+        let voter = document.createElement("span");
+        voter.textContent = `${v.voter} : [votes here]`;
+        voteRow.append(voter);
+
+        containingDiv.appendChild(voteRow);
+    })
+
+
 }
 
 function removeChangedClassFromRow(table: HTMLTableElement, rowIndex: number) {
@@ -85,35 +107,41 @@ function removeChangedClassFromRow(table: HTMLTableElement, rowIndex: number) {
     })
 }
 
-// Function to save edited data to the server
+
 async function postVoteSubmissionsToGetResults(table: HTMLTableElement) {
-    // const cells = table.rows[rowIndex].cells;
-    // const dataToSave: submissionResult = <submissionResult>{};
-    //
-    // for (let i = 0; i < cells.length - 1; i++) {
-    //     const input = <HTMLInputElement|HTMLTextAreaElement>cells[i].querySelector('input,textarea');
-    //     const fieldName = fieldNameList[i];
-    //     dataToSave[fieldName] = input.value;
-    //     if (fieldName === "score") {
-    //         dataToSave[fieldName] = Number.parseFloat(input.value)
-    //     }
-    // }
-    //
-    // try {
-    //     const response = await fetch('/', {
-    //         method: 'POST',
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         },
-    //         body: JSON.stringify(dataToSave)
-    //     });
-    //
-    //     if (response.ok) {
-    //         console.log('Data saved successfully!');
-    //     } else {
-    //         throw new Error('Failed to save data: ' + response.statusText);
-    //     }
-    // } catch (error) {
-    //     throw new Error('Error saving data: ' +  error);
-    // }
+
+    const leftTextArea = <HTMLTextAreaElement>document.getElementById('leftTextArea')
+    let dataToSave = {};
+
+    try {
+        const response = await fetch('/process', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(dataToSave)
+        });
+
+        if (response.ok) {
+            console.log('Data saved successfully!');
+            jsonData = await response.json();
+            displayVoteResults(leftTextArea, jsonData);
+        } else {
+            throw new Error('Failed to save data: ' + response.statusText);
+        }
+    } catch (error) {
+        throw new Error('Error saving data: ' +  error);
+    }
+
+
+
+    let jsonData: resultData;
+    try {
+        const response = await fetch('/text');
+
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+
+
 }
