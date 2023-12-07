@@ -3,7 +3,6 @@
 *.jpg
 *.png
 *.log
-*.json
 __pycache__/
 *-oauth2.json
 client_secrets.json

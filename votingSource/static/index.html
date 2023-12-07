@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vote Submissions Table</title>
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">-->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<p id="problems"></p>
+    <div id="left">
+        <h1>Votes</h1>
+        <table id="mainTable">
+            <!-- Table rows will be dynamically added here -->
+        </table>
+    </div>
+    <div id="right">
+        <h1>Results</h1>
+        <table id="resultsTable">
+            <!-- Table rows will be dynamically added here -->
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Fetch data when the page loads
+        //import {fetchData} from "./static/script";
+
+        fetchVoteData();
+    </script>
+</body>
+</html>

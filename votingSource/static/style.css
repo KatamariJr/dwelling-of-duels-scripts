@@ -1,0 +1,13 @@
+#left {
+    background-color: blue;
+    width: 48%;
+    margin: 0;
+    padding: 0;
+}
+
+#right {
+    background-color: pink;
+    width: 22%;
+    margin: 0;
+    padding: 0;
+}

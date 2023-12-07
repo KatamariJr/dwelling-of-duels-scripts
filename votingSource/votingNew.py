@@ -1,9 +1,13 @@
+import subprocess
+
 import numpy as np
 from scipy import stats
 from typing import TypedDict, List
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 class SongVoteData:
     voter: str
@@ -152,6 +156,19 @@ def indexRoute():
         "deviants": voteDataResults[1]
     }
 
+@app.get("/text")
+def indexRoute():
+    theData = open('votes.txt', 'r').read()
+    # split the text file by double carriage return
+    dataArray = theData.split("\n\n")
+
+    returnArray = []
+
+    for k in range(0, len(dataArray), 2):
+        returnArray.append({"voter": dataArray[k], "votes": dataArray[k+1]})
+
+    return returnArray
+
 def main():
     theData = open('votes.txt', 'r').read()
     # split the text file by double carriage return
@@ -163,3 +180,5 @@ def main():
 
     for bar in voteDataResults[1]:
         print(f"{bar[0]}: {bar[1]}")
+
+subprocess.run(["tsc"])
