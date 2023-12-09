@@ -1,17 +1,20 @@
 import json
 import subprocess
+import csv
 
+import boto3
 import numpy as np
 from scipy import stats
 from typing import TypedDict, List
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-import boto3
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 s3 = boto3.client('s3')
+
+preparedSongList = []
 
 class SongVoteData:
     voter: str
@@ -123,13 +126,6 @@ def processVoteData(dataArray: list[str]):
 
         #print(pulledScore, roundedScore, songs[finals[k]])
 
-        preparedSongList = [
-            {
-                "songName": "Final Fantasy - Fantastic Finale",
-                "artist": "Tucker!!!"
-            }
-        ]
-
         songName = songNames[finals[k]]
         returningVoteList.append({
             "place": num+1,
@@ -223,7 +219,7 @@ def s3Route():
     return parsedObjects
 
 
-def main():
+def oldLoadFromFile():
     theData = open('votes.txt', 'r').read()
     # split the text file by double carriage return
     dataArray = theData.split("\n\n")
@@ -235,4 +231,17 @@ def main():
     for bar in voteDataResults[1]:
         print(f"{bar[0]}: {bar[1]}")
 
+
+@app.get("/reload")
+def readArtistMappingCSV():
+    with open('songs.csv', newline='') as csvfile:
+        spamreader = csv.DictReader(csvfile)
+        for row in spamreader:
+            preparedSongList.append({
+                "artist": row['artistNames'],
+                "songName": f'{row["gameNames"]} - {row["songTitle"]}'
+            })
+
+
 subprocess.run(["tsc"])
+readArtistMappingCSV()
