@@ -122,13 +122,22 @@ def processVoteData(dataArray: list[str]):
         #percentage = (theArray[finals[k]] - zLow) / (zHigh - zLow)
 
         #print(pulledScore, roundedScore, songs[finals[k]])
+
+        preparedSongList = [
+            {
+                "songName": "Final Fantasy - Fantastic Finale",
+                "artist": "Tucker!!!"
+            }
+        ]
+
+        songName = songNames[finals[k]]
         returningVoteList.append({
             "place": num+1,
-            "songTitle": songNames[finals[k]],
+            "songTitle": songName,
             "rating": ratingNamesFull[roundedScore],
             "operand": operand,
             "adjustment": adj,
-            "artist": "Bob Dole",
+            "artist": guessArtistName(preparedSongList, songName),
         })
     print(f"Voters: {len(theResults)}")
 
@@ -154,6 +163,13 @@ def processVoteData(dataArray: list[str]):
         returningDeviantList.append({"voter": theResults[ia[i]].voter, "deviance": np.round(devTotals[ia[i]] * 100) / 100})
 
     return {"results": returningVoteList, "deviants": returningDeviantList, "voterCount": len(dataArray)/2}
+
+
+def guessArtistName(songList: list[dict], songName: str) -> str:
+    for s in songList:
+        if s["songName"] == songName:
+            return s["artist"]
+    return "ARTIST"
 
 # @app.get("/")
 # def indexRoute():
