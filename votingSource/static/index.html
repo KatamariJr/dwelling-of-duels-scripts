@@ -17,6 +17,12 @@
     </div>
     <div id="right">
         <h1>Votes</h1>
+        Sort By
+        <select onchange="changeSort(event)">
+            <option value="time">Submit Time</option>
+            <option value="email">Submitter Email</option>
+            <option value="deviance">Deviance</option>
+        </select>
         <div id="rightGrid"></div>
     </div>
 

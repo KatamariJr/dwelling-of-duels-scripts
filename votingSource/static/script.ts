@@ -20,9 +20,10 @@ type votesSubmissions = {
     deviance: number
 }[]
 
-let voteSubmissionData: votesSubmissions;
+let voteSubmissionData: votesSubmissions|null = null;
 let disabledCheckedIndexes: number[] = [];
 let reviewedCheckedIndexes: number[] = [];
+let sortMethod: "time"|"deviance"|"email"|string = "time";
 
 async function fetchVoteSubmissions() {
     try {
@@ -33,8 +34,18 @@ async function fetchVoteSubmissions() {
     }
 
     const rightGrid = <HTMLDivElement>document.getElementById('rightGrid')
-    displayVoteSubmissions(rightGrid, voteSubmissionData);
+    displayVoteSubmissions(rightGrid);
     postVoteSubmissionsToGetResults()
+}
+
+// event that is hooked onto the <option> element for changing votes sort.
+function changeSort(e: InputEvent) {
+    sortMethod = (e.target as HTMLSelectElement).value;
+    if (voteSubmissionData === null) {
+        return;
+    }
+    const rightGrid = <HTMLDivElement>document.getElementById('rightGrid')
+    displayVoteSubmissions(rightGrid);
 }
 
 // Function to create and display table rows from JSON data
@@ -49,7 +60,7 @@ function displayVoteResults(textArea :HTMLTextAreaElement, data: resultData) {
         }
     })
     const rightGrid = <HTMLDivElement>document.getElementById('rightGrid')
-    displayVoteSubmissions(rightGrid, voteSubmissionData);
+    displayVoteSubmissions(rightGrid);
 
     let s = "";
 
@@ -63,10 +74,34 @@ function displayVoteResults(textArea :HTMLTextAreaElement, data: resultData) {
     textArea.textContent = s;
 }
 
-function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmissions) {
+function displayVoteSubmissions(containingDiv: HTMLDivElement) {
     containingDiv.replaceChildren();
 
-    data.forEach((v,i) => {
+    //sort voteSubmissionData in a new array and use those indexes to map back onto the original data
+    let sortedIndexes = Array.from(voteSubmissionData.keys())
+        .sort((a, b) => {
+            if (sortMethod === 'time') {
+                let aDate = Date.parse(voteSubmissionData[a].submissionTime);
+                let bDate = Date.parse(voteSubmissionData[b].submissionTime);
+                return aDate < bDate ? -1 : 1;
+            }
+            if (sortMethod === "email") {
+                let aEmail = voteSubmissionData[a].submitterEmail;
+                let bEmail = voteSubmissionData[b].submitterEmail;
+                return aEmail.localeCompare(bEmail);
+            }
+            if (sortMethod === "deviance") {
+                let aDeviance = voteSubmissionData[a].deviance;
+                let bDeviance = voteSubmissionData[b].deviance;
+                return aDeviance < bDeviance ? -1 : 1;
+            }
+            return 0;
+        })
+
+
+    sortedIndexes.forEach((si) => {
+        let v = voteSubmissionData[si];
+        let i = si;
         let voteRow = document.createElement("div");
 
         let voteDate = new Date(Date.parse(v.submissionTime));
