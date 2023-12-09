@@ -29,8 +29,9 @@ class SongVoteData:
     def __str__(self):
         return f"{self.voter} {self.reviewed} {self.scores}"
 
+
 @app.post("/process")
-def processVoteData(dataArray: list[str]):
+def processVoteData(dataArray: list[str]) -> dict:
     # populate the list of songs from the list in the first vote block
     songNames = []
     songsCondensed = []
@@ -167,18 +168,19 @@ def guessArtistName(songList: list[dict], songName: str) -> str:
             return s["artist"]
     return "ARTIST"
 
-# @app.get("/")
-# def indexRoute():
-#     theData = open('votes.txt', 'r').read()
-#     # split the text file by double carriage return
-#     dataArray = theData.split("\n\n")
-#
-#     voteDataResults = processVoteData(dataArray)
-#
-#     return {
-#         "results": voteDataResults[0],
-#         "deviants": voteDataResults[1]
-#     }
+
+@app.post("/saveResults")
+def saveProcess(dataArray: list[str]):
+    processResults = processVoteData(dataArray)
+
+    json_object = json.dumps(processResults['results'], indent='  ')
+
+    with open("results.json", "w") as outfile:
+        outfile.write(json_object)
+
+    return json_object
+
+
 
 @app.get("/loadFromFile")
 def indexRoute():

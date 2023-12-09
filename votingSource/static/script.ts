@@ -157,6 +157,14 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement) {
 }
 
 async function postVoteSubmissionsToGetResults() {
+    return sendVoteSubmissions("/process", true)
+}
+
+async function postVoteSubmissionsToSave() {
+    return sendVoteSubmissions("/saveResults", false)
+}
+
+async function sendVoteSubmissions(endpoint: string, displayOutput: boolean) {
     let jsonData: resultData;
 
     const leftTextArea = <HTMLTextAreaElement>document.getElementById('leftTextArea')
@@ -173,7 +181,7 @@ async function postVoteSubmissionsToGetResults() {
     })
 
     try {
-        const response = await fetch('/process', {
+        const response = await fetch(endpoint, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -183,8 +191,10 @@ async function postVoteSubmissionsToGetResults() {
 
         if (response.ok) {
             console.log('Votes processed successfully!');
-            jsonData = await response.json();
-            displayVoteResults(leftTextArea, jsonData);
+            if (displayOutput){
+                jsonData = await response.json();
+                displayVoteResults(leftTextArea, jsonData);
+            }
         } else {
             throw new Error('Failed to save data: ' + response.statusText);
         }
