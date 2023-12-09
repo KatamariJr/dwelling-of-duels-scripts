@@ -1,3 +1,4 @@
+import json
 import subprocess
 
 import numpy as np
@@ -5,9 +6,12 @@ from scipy import stats
 from typing import TypedDict, List
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+import boto3
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+s3 = boto3.client('s3')
 
 class SongVoteData:
     voter: str
@@ -169,6 +173,32 @@ def indexRoute():
         returnArray.append({"voter": dataArray[k], "votes": dataArray[k+1]})
 
     return returnArray
+
+
+@app.get("/loadFromS3")
+def s3Route():
+    bucketName = "dwellingofduels-static-site-dev"
+    results = s3.list_objects_v2(Bucket=bucketName, Prefix="voting-form/")
+    parsedObjects = []
+
+    for obj in results['Contents']:
+        # Check if the object has a JSON file extension (e.g., .json)
+        if obj['Key'].endswith('.json'):
+            # Download the JSON file
+            file_obj = s3.get_object(Bucket=bucketName, Key=obj['Key'])
+
+            # Read the JSON data from the file object
+            json_data = file_obj['Body'].read().decode('utf-8')
+
+            # Unmarshal the JSON data into objects
+            try:
+                parsed_json = json.loads(json_data)
+                parsedObjects.append(parsed_json)
+            except json.JSONDecodeError as e:
+                print(f"Error parsing JSON file {obj['Key']}: {e}")
+
+    return parsedObjects
+
 
 def main():
     theData = open('votes.txt', 'r').read()
