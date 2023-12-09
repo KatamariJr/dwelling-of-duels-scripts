@@ -122,7 +122,14 @@ def processVoteData(dataArray: list[str]):
         #percentage = (theArray[finals[k]] - zLow) / (zHigh - zLow)
 
         #print(pulledScore, roundedScore, songs[finals[k]])
-        returningVoteList.append({"place": num+1, "songTitle": songNames[finals[k]], "rating": ratingNamesFull[roundedScore], "operand": operand, "adjustment": adj})
+        returningVoteList.append({
+            "place": num+1,
+            "songTitle": songNames[finals[k]],
+            "rating": ratingNamesFull[roundedScore],
+            "operand": operand,
+            "adjustment": adj,
+            "artist": "Bob Dole",
+        })
     print(f"Voters: {len(theResults)}")
 
     returningDeviantList = []

@@ -1,6 +1,7 @@
 type resultData = {
     results: {
         place: number
+        artist: string
         songTitle: string
         rating: string
         operand: string
@@ -65,7 +66,7 @@ function displayVoteResults(textArea :HTMLTextAreaElement, data: resultData) {
     let s = "";
 
     data.results.forEach((item, index) => {
-        s = s.concat(`#${index+1} Artist - ${item.songTitle} - ${item.rating} ${item.operand}${item.adjustment}\n`)
+        s = s.concat(`#${index+1} ${item.artist} - ${item.songTitle} - ${item.rating} ${item.operand}${item.adjustment}\n`)
     });
 
     s += `\nVoters: ${data.voterCount}`
