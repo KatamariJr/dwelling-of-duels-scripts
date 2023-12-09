@@ -14,8 +14,9 @@ type resultData = {
 }
 
 type votesSubmissions = {
+    submissionTime: string
     votes: string
-    voter: string
+    submitterEmail: string
     deviance: number
 }[]
 
@@ -25,7 +26,7 @@ let reviewedCheckedIndexes: number[] = [];
 
 async function fetchVoteSubmissions() {
     try {
-        const response = await fetch('/loadFromFile');
+        const response = await fetch('/loadFromS3');
         voteSubmissionData = (await response.json() as votesSubmissions);
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -41,7 +42,7 @@ function displayVoteResults(textArea :HTMLTextAreaElement, data: resultData) {
     //update voteSubmission table with deviant info
     data.deviants.forEach((deviant) => {
         for (let vsd of voteSubmissionData) {
-            if (vsd.voter === deviant.voter) {
+            if (vsd.submitterEmail === deviant.voter) {
                 vsd.deviance = deviant.deviance;
                 break;
             }
@@ -68,9 +69,12 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement, data: votesSubmis
     data.forEach((v,i) => {
         let voteRow = document.createElement("div");
 
+        let voteDate = new Date(Date.parse(v.submissionTime));
+
+
         let voter = document.createElement("label");
         voter.setAttribute("for", String(i));
-        voter.textContent = `${v.voter} : [votes here]   deviance: ${v.deviance}`;
+        voter.textContent = `${v.submitterEmail} : ${voteDate.getMonth()}-${voteDate.getDate()} ${voteDate.getHours()}:${voteDate.getMinutes()}  deviance: ${v.deviance}`;
 
         let disableCheckBox = document.createElement("input");
         disableCheckBox.type = "checkbox";
@@ -127,9 +131,9 @@ async function postVoteSubmissionsToGetResults() {
             return [];
         }
         if (reviewedCheckedIndexes.includes(index)) {
-            return [value.voter + " (reviewed)", value.votes]
+            return [value.submitterEmail + " (reviewed)", value.votes]
         }
-        return [value.voter, value.votes]
+        return [value.submitterEmail, value.votes]
     })
 
     try {

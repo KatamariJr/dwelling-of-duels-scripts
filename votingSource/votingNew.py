@@ -170,7 +170,7 @@ def indexRoute():
     returnArray = []
 
     for k in range(0, len(dataArray), 2):
-        returnArray.append({"voter": dataArray[k], "votes": dataArray[k+1]})
+        returnArray.append({"submitterEmail": dataArray[k], "votes": dataArray[k+1]})
 
     return returnArray
 
