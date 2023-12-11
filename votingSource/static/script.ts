@@ -32,6 +32,7 @@ async function fetchVoteSubmissions() {
         voteSubmissionData = (await response.json() as votesSubmissions);
     } catch (error) {
         console.error('Error fetching data:', error);
+        showModal("Error fetching data: " + error)
     }
 
     const rightGrid = <HTMLDivElement>document.getElementById('rightGrid')
