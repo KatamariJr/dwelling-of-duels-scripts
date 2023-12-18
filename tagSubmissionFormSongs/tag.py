@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import eyed3
+import sys
 
 
 MAX_TOTAL_FILENAME_LENGTH = 180
@@ -85,44 +86,50 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
     audiofile.tag.save()
 
 
-fileDirectory = "./files"
+def main() -> int:
+    fileDirectory = "./files"
 
-fileDirectoryListing = os.listdir(fileDirectory)
+    fileDirectoryListing = os.listdir(fileDirectory)
 
-if "newSongs" not in fileDirectoryListing:
-    os.mkdir(fileDirectory + "/newSongs")
-if "newSongsAnon" not in fileDirectoryListing:
-    os.mkdir(fileDirectory + "/newSongsAnon")
+    if "newSongs" not in fileDirectoryListing:
+        os.mkdir(fileDirectory + "/newSongs")
+    if "newSongsAnon" not in fileDirectoryListing:
+        os.mkdir(fileDirectory + "/newSongsAnon")
 
-coverImage = ""
-for filename in fileDirectoryListing:
-    if "jpg" not in filename.lower():
-        continue
-    coverImage = fileDirectory + '/' + filename
-    break
+    coverImage = ""
+    for filename in fileDirectoryListing:
+        if "jpg" not in filename.lower():
+            continue
+        coverImage = fileDirectory + '/' + filename
+        break
 
-for filename in fileDirectoryListing:
-    if "json" not in filename:
-        continue
-    splitFilename = filename.split(".")
-    uuid = splitFilename[0]
+    for filename in fileDirectoryListing:
+        if "json" not in filename:
+            continue
+        splitFilename = filename.split(".")
+        uuid = splitFilename[0]
 
-    try:
-        jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
-    except Exception as e:
-        print("error reading file " + filename + ": " + e)
+        try:
+            jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
+        except Exception as e:
+            print("error reading file " + filename + ": " + e)
+            return 1
 
-    # get all the names and stuff
-    songTitle = jsonData['songTitle']
-    artistNames = jsonData['artistNames']
-    gameNames = jsonData['gameNames']
-    isAlt = jsonData['isAlt'] == "true"
+        # get all the names and stuff
+        songTitle = jsonData['songTitle']
+        artistNames = jsonData['artistNames']
+        gameNames = jsonData['gameNames']
+        isAlt = jsonData['isAlt'] == "true"
 
-    # create file for non-anonymized
-    renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
-    renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
+        # create file for non-anonymized
+        renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
+        renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
 
-    # create file for anonymized
-    renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
+        # create file for anonymized
+        renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
 
-print("Done\n")
+    print("Done\n")
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())
