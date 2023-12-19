@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import json
 import os
@@ -6,13 +6,12 @@ import shutil
 import eyed3
 import sys
 
-
 MAX_TOTAL_FILENAME_LENGTH = 180
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
 ALBUM_NAME = "DoD23-10: Horror Games"
 YEAR = "2023"
 
-def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
+def renameAndCopy(isAlt: bool, trackNum: int|None, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
     extension = ""
     originalUUID = ""
     if "json" in srcFile.lower():
@@ -45,11 +44,16 @@ def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str,
         else:
             remainingCharacters -= len(songTitle)
 
-
+    placePrefix = ""
     if isAlt:
-        newFilename = "ZZ-%s-%s-%s-DoD%s.%s" % (truncatedArtistNames, truncatedGameNames, truncatedSongTitle, originalUUID, extension)
+        placePrefix = "ZZ-"
+        trackNum = 99
+    elif trackNum is not None:
+        placePrefix = f"{trackNum:02}-"
     else:
-        newFilename = "%s-%s-%s-DoD%s.%s" % (truncatedArtistNames, truncatedGameNames, truncatedSongTitle, originalUUID, extension)
+        trackNum = 0
+
+    newFilename = "%s%s-%s-%s-DoD%s.%s" % (placePrefix, truncatedArtistNames, truncatedGameNames, truncatedSongTitle, originalUUID, extension)
 
     newFilename = "".join(x for x in newFilename if x.isalnum() or x in "._- ,!")
 
@@ -60,10 +64,10 @@ def renameAndCopy(isAlt: bool, artistNames: str, gameNames: str, songTitle: str,
     shutil.copyfile(srcFile, targetFilename)
 
     if extension == "mp3":
-        retag(targetFilename, artistNames, gameNames, songTitle, albumName, coverImageFilename)
+        retag(targetFilename, trackNum, artistNames, gameNames, songTitle, albumName, coverImageFilename)
 
 
-def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str, albumName: str, coverImageFilename: str):
+def retag(targetFilename: str, trackNum: int, artistNames: str, gameNames: str, songTitle: str, albumName: str, coverImageFilename: str):
     audiofile = eyed3.load(targetFilename)
     if audiofile is None:
         raise "File mp3 open fail!!!"
@@ -74,19 +78,24 @@ def retag(targetFilename: str, artistNames: str, gameNames: str, songTitle: str,
     audiofile.tag.album = albumName
     audiofile.tag.recording_date = YEAR
     audiofile.tag.comments.set('www.dwellingofduels.net')
+    audiofile.tag.track_num = trackNum
     imageBytes = None
     try:
         imageBytes = open(coverImageFilename, 'rb').read()
     except:
         print("Missing jpg for cover image in this folder!")
     audiofile.tag.images.set(3, imageBytes, 'image/jpeg')
-    if isAlt:
-        audiofile.tag.track_num = 99
 
     audiofile.tag.save()
 
 
-def main() -> int:
+def parseResultsJson(filename: str) -> list[dict]:
+    with open(filename, "r") as f:
+        jdict = json.load(f)
+    return jdict
+
+
+def main(resultsData: list[dict] | None = None) -> int:
     fileDirectory = "./files"
 
     fileDirectoryListing = os.listdir(fileDirectory)
@@ -113,23 +122,40 @@ def main() -> int:
             jsonData = json.loads(open(fileDirectory + '/' + filename, 'rb').read())
         except Exception as e:
             print("error reading file " + filename + ": " + e)
-            return 1
+            return 2
 
         # get all the names and stuff
         songTitle = jsonData['songTitle']
         artistNames = jsonData['artistNames']
         gameNames = jsonData['gameNames']
         isAlt = jsonData['isAlt'] == "true"
+        trackNum = None
+
+        # if resultsFile was passed in, try finding a placement record with same title
+        if resultsData is not None and isAlt is not True:
+            for r in resultsData:
+                if r["songTitle"] == songTitle:
+                    trackNum = r["place"]
+                    break
+            raise Exception(f"didnt find record for {songTitle} in results data")
 
         # create file for non-anonymized
-        renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
-        renameAndCopy(isAlt, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
+        renameAndCopy(isAlt, trackNum, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
+        renameAndCopy(isAlt, trackNum, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + filename, fileDirectory + '/newSongs', coverImage)
 
         # create file for anonymized
-        renameAndCopy(isAlt, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
+        renameAndCopy(isAlt, None, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
 
     print("Done\n")
     return 0
 
 if __name__ == '__main__':
+    if len(sys.argv) == 2:
+        filepath = sys.argv[1]
+        if '.json' not in filepath:
+            print("first parameter should be a json file or nothing")
+            sys.exit(1)
+        print(f'using {filepath} as results file')
+        resultsListDict = parseResultsJson(filepath)
+        sys.exit(main(resultsListDict))
     sys.exit(main())
