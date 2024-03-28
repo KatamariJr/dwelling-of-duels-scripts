@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import json
 import os
@@ -6,12 +6,13 @@ import shutil
 import eyed3
 import sys
 
-MAX_TOTAL_FILENAME_LENGTH = 180
+MAX_TOTAL_FILENAME_LENGTH = 175
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
-ALBUM_NAME = "DoD23-10: Horror Games"
-YEAR = "2023"
+ALBUM_NAME = "DoD24-03: HAL Laboratory"
+YEAR = "2024"
 
-def renameAndCopy(isAlt: bool, trackNum: int|None, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
+
+def renameAndCopy(isAlt: bool, trackNum: int, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
     extension = ""
     originalUUID = ""
     if "json" in srcFile.lower():
