@@ -134,11 +134,17 @@ def main(resultsData: list[dict] | None = None) -> int:
 
         # if resultsFile was passed in, try finding a placement record with same title
         if resultsData is not None and isAlt is not True:
+            matchingTitle = f"{gameNames.strip()} - {songTitle.strip()}".strip()
+            success = False
             for r in resultsData:
-                if r["songTitle"] == songTitle:
+                if r["songTitle"] == matchingTitle:
                     trackNum = r["place"]
+                    success = True
                     break
-            raise Exception(f"didnt find record for {songTitle} in results data")
+            if not success:
+                #raise Exception(f"didnt find record for {matchingTitle} in results data")
+                print(f"didnt find record for {matchingTitle} in results data")
+
 
         # create file for non-anonymized
         renameAndCopy(isAlt, trackNum, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
