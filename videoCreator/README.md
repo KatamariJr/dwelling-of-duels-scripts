@@ -15,6 +15,7 @@ A secondary script does this:
 1. install python 
 1. install python dependencies by running `pip install -r requirements.txt`
 1. copy the song files and album art image into the `copySongsHere` folder
+1. create an `uploadSettings.txt` file like the `uploadSettings_example.txt` file.
 1. run the primary script `createAndUploadFromMP3.bat`. This should prompt you to login to google. This creates all the video files and begins uploading them.
 1. After verifying all the videos look good on the youtube channel, run the secondary script `setToPublic.bat` to make the playlist and videos all public.
 
