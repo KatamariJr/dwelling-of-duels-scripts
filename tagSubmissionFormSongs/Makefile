@@ -42,7 +42,6 @@ download:
 	aws s3 sync s3://dwellingofduels-static-site/upload-form ./files --exclude="*deleted*"
 
 fromScratch:
-	$(MAKE) cleanTaggedSongs
 	$(MAKE) cleanAll
 	$(MAKE) download
 	$(MAKE) list
