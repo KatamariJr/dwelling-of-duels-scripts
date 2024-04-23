@@ -13,16 +13,17 @@
 
 # Tallying votes and tagging results
 1. take the `songs.csv` file from the `/tagSubmissionFormSongs` directory (create it with `make list`) and copy to the `/votingSource` directory
-2. create the `votes.txt` file in the `/voting` by using `make votes` and copy to the `/votingSource` directory
-3. run the tally server by using `make start` in the `/votingSource` directory
-4. make any changes to the songs by clicking the checkboxes. the leftmost checkbox when unchecked will ignore this vote 
+2. Run the `votes_archive.py` script from the `voting` directory to archive previous month's votes.
+3. create the `votes.txt` file in the `/voting` directory by using `make fromScratch` and copy to the `/votingSource` directory
+4. run the tally server by using `make start` in the `/votingSource` directory, and visit it at `localhost:8000/static/index.html`
+5. make any changes to the songs by clicking the checkboxes. the leftmost checkbox when unchecked will ignore this vote 
 for results. The rightmost checkbox when checked will consider the votes to be weighted in the case of song reviews.
-5. click `Save Results`. This writes to the `results.json` file in the `/votingSource` directory
-6. copy and save the text content from the left page to a notepad file so we can post it later
-7. copy the `results.json` file created in the last step back to `/tagSubmissionFormSongs`
-8. update any incorrect tags for songs by running the server mentioned in `Tagging New Submissions` above.
-9. run `make tagResultsWithLyrics` in `/tagSubmissionFormSongs`
-10. copy all the songs from `newSongs` over to the generator's correct dodarchive directory
+6. click `Save Results`. This writes to the `results.json` file in the `/votingSource` directory
+7. copy and save the text content from the left page to a notepad file so we can post it later
+8. copy the `results.json` file created in the last step back to `/tagSubmissionFormSongs`
+9. update any incorrect tags for songs by running the server mentioned in `Tagging New Submissions` above.
+10. run `make tagResultsWithLyrics` in `/tagSubmissionFormSongs`
+11. copy all the songs from `newSongs` over to the generator's correct dodarchive directory
 
 
 
@@ -31,6 +32,8 @@ for results. The rightmost checkbox when checked will consider the votes to be w
 # TODO
 - need a way to update an entry with a new mp3 easily. needs to put it up to s3 so its stored for future pulls
 - add button to auto archive the previous month's tracks. names teh folders automatically (or at least provides a default automatically)
+- create a script to auto archive old votes from s3
+- clean, combine, and organize the `voting` and `votingSource` folders
 
 
 
