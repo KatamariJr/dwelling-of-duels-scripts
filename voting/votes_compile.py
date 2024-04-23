@@ -28,5 +28,5 @@ for filename in fileDirectoryListing:
     outputText += '%s\n\n%s\n\n' % (submitter, votes)
 
 #remove final newline
-outputText = outputText[0:-1]
+outputText = outputText[0:-2]
 outputVotesFiles.write(outputText)
