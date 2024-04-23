@@ -34,7 +34,6 @@ for results. The rightmost checkbox when checked will consider the votes to be w
 
 
 
-
 # notes on downloader from first/second real use case (this section is very old)
 
 - people resubmitting votes is weird to deal with. maybe a list function like the song downloader can help put things into csv and locate and delete old votes. OR the voting script just looks and identifies multiple votes from same address, only uses latest.

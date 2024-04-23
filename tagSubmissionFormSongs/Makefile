@@ -29,6 +29,7 @@ cleanTaggedSongs:
 cleanAll:
 	$(MAKE) cleanSongs
 	$(MAKE) cleanMetadata
+	$(MAKE) cleanTaggedSongs
 
 cleanMetadata:
 	rm -f ./files/*.json
