@@ -43,6 +43,7 @@ for results. The rightmost checkbox when checked will consider the votes to be w
 - clean, combine, and organize the `voting` and `votingSource` folders
 - move the dodSubmissionsHelper project into this repo
 - make a script that can auto generate the variants of the banner art that I need
+- make the `tag.py` script read the month name info from a cfg file so we dont have to edit the source every month
 
 
 
