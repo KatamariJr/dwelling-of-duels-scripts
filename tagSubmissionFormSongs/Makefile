@@ -1,4 +1,4 @@
-.PHONY: tag fromScratch tag-with-lyrics download lyrics cleanTaggedSongs cleanDownloadedData download songs.csv
+.PHONY: tag fromScratch download lyrics cleanTaggedSongs cleanDownloadedData download songs.csv
 
 tagResultsWithLyrics:
 	$(MAKE) tagResults
