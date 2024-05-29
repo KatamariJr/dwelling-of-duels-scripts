@@ -1,14 +1,21 @@
 # how to do things as of 4/1/2024
 
 # Changelog
+4/27/2024
+- added tagging new submissions instructions
+
 4/1/2024
 - created file
 
 
 # Tagging new submissions
-
-
-
+1. archive all old submissions from the previous month from the aws s3 bucket. No script for this yet, just move them into the `/upload-form-archive/mon-yyyy/` folder
+2. run the song submission helper under the `~/programming/dodSubmissionsHelper` directory by using `make run` and browse to it at `localhost:4000`
+3. adjust any song submissions that need to be changed, like if someone resubmitted an entry, delete the old one, fix any game names that are wrong, artist names, etc.
+4. kill the dodSubmissionsHelper process
+5. navigate to the `/tagSubmissionFormSongs` directory, update tag.py with the new month's album name, and insert the new album art file in the `files` directory.
+6. in the same `/tagSubmissionFormSongs` directory, run `make fromScratch`. This removes all old downloaded files, redownloads, and tags them all.
+7. when completed, copy all the anonymous songs from `files/newSongsAnon` and put them in the appropriate month folder in the `generator` project.
 
 
 # Tallying votes and tagging results
@@ -31,22 +38,18 @@ for results. The rightmost checkbox when checked will consider the votes to be w
 
 # TODO
 - need a way to update an entry with a new mp3 easily. needs to put it up to s3 so its stored for future pulls
-- add button to auto archive the previous month's tracks. names teh folders automatically (or at least provides a default automatically)
+- add button to auto archive the previous month's tracks. names the folders automatically (or at least provides a default automatically)
 - create a script to auto archive old votes from s3
 - clean, combine, and organize the `voting` and `votingSource` folders
+- move the dodSubmissionsHelper project into this repo
+- make a script that can auto generate the variants of the banner art that I need
 
 
 
 # notes on downloader from first/second real use case (this section is very old)
-
 - people resubmitting votes is weird to deal with. maybe a list function like the song downloader can help put things into csv and locate and delete old votes. OR the voting script just looks and identifies multiple votes from same address, only uses latest.
-
 - some kinda uber script that can take all the data from the songs 'list.csv' and the output from votes.exe and fill in all the artist names for me, AND update all the mp3 track listings/rankings
-
 - throw a normal error when the album art is missing
-
 - songs that need to be moved to an alt during/after voting are hard to deal with
-
 - sometimes votes come in inconsistently such as when we moved minorffanatic's entry to alts but people still had the original votes sheet open
-
 - add a cache
