@@ -27,10 +27,12 @@
 for results. The rightmost checkbox when checked will consider the votes to be weighted in the case of song reviews.
 6. click `Save Results`. This writes to the `results.json` file in the `/votingSource` directory
 7. copy and save the text content from the left page to a notepad file so we can post it later
-8. copy the `results.json` file created in the last step back to `/tagSubmissionFormSongs`
-9. update any incorrect tags for songs by running the server mentioned in `Tagging New Submissions` above.
-10. run `make tagResultsWithLyrics` in `/tagSubmissionFormSongs`
-11. copy all the songs from `newSongs` over to the generator's correct dodarchive directory
+8. correct any "ARTIST" fields in the `results.json` that didnt auto fill.
+9. copy the `results.json` file created in the last step back to `/tagSubmissionFormSongs`
+10. update any incorrect tags for songs by running the server mentioned in `Tagging New Submissions` above.
+11. run `make tagResultsWithLyrics` in `/tagSubmissionFormSongs`
+12. copy all the songs from `newSongs` over to the generator's correct dodarchive directory
+13. spot check all the tagged MP3 files and make corrections if needed
 
 
 
@@ -44,7 +46,7 @@ for results. The rightmost checkbox when checked will consider the votes to be w
 - move the dodSubmissionsHelper project into this repo
 - make a script that can auto generate the variants of the banner art that I need
 - make the `tag.py` script read the month name info from a cfg file so we dont have to edit the source every month
-
+- make the voting tally script auto-flag anybody who has too many "average +0.00" votes because those are usually incomplete
 
 
 # notes on downloader from first/second real use case (this section is very old)

@@ -7,6 +7,7 @@ fromScratch:
 
 clean:
 	rm -r ./files
+	rm ./votes.txt
 
 download:
 	./download.sh
