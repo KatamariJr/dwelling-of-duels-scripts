@@ -1,6 +1,9 @@
-# how to do things as of 4/1/2024
+# how to do things
 
-# Changelog
+# README Changelog
+6/3/2024
+- add bits about correcting results songs that were tagged wrong
+
 4/27/2024
 - added tagging new submissions instructions
 
