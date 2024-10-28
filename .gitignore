@@ -23,6 +23,5 @@ renameArtist/.idea/vcs.xml
 /tagSubmissionFormSongs/**/lyrics.txt
 /tagSubmissionFormSongs/**/*.json
 /tagSubmissionFormSongs/**/*.mp3
-/votingSource/votes.txt
 /voting/votes.txt
 /voting/files/

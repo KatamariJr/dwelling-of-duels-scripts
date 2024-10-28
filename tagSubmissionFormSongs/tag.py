@@ -8,7 +8,7 @@ import sys
 
 MAX_TOTAL_FILENAME_LENGTH = 175
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
-ALBUM_NAME = "DoD24-03: HAL Laboratory"
+ALBUM_NAME = "DoD24-10: Aliens"
 YEAR = "2024"
 
 
@@ -71,7 +71,7 @@ def renameAndCopy(isAlt: bool, trackNum: int, artistNames: str, gameNames: str, 
 def retag(targetFilename: str, trackNum: int, artistNames: str, gameNames: str, songTitle: str, albumName: str, coverImageFilename: str):
     audiofile = eyed3.load(targetFilename)
     if audiofile is None:
-        raise "File mp3 open fail!!!"
+        raise Exception(targetFilename + " mp3 open fail!!!")
     audiofile.initTag()
     audiofile.tag.artist = artistNames
     audiofile.tag.non_std_genre = gameNames
@@ -113,6 +113,8 @@ def main(resultsData: list[dict] | None = None) -> int:
         coverImage = fileDirectory + '/' + filename
         break
 
+    tagErrors = []
+
     for filename in fileDirectoryListing:
         if "json" not in filename:
             continue
@@ -144,6 +146,8 @@ def main(resultsData: list[dict] | None = None) -> int:
             if not success:
                 #raise Exception(f"didnt find record for {matchingTitle} in results data")
                 print(f"didnt find record for {matchingTitle} in results data")
+                #add this song name to the warnings we will print at the end
+                tagErrors.append(f"didnt find record for {matchingTitle} in results data")
 
 
         # create file for non-anonymized
@@ -153,6 +157,9 @@ def main(resultsData: list[dict] | None = None) -> int:
         # create file for anonymized
         renameAndCopy(isAlt, None, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
 
+    if len(tagErrors) > 0:
+        for r in tagErrors:
+            print(r)
     print("Done\n")
     return 0
 

@@ -13,6 +13,7 @@
 
 # Tagging new submissions
 1. archive all old submissions from the previous month from the aws s3 bucket. No script for this yet, just move them into the `/upload-form-archive/mon-yyyy/` folder
+   1. TODO - modify the votes archive script to also work on this step
 2. run the song submission helper under the `~/programming/dodSubmissionsHelper` directory by using `make run` and browse to it at `localhost:4000`
 3. adjust any song submissions that need to be changed, like if someone resubmitted an entry, delete the old one, fix any game names that are wrong, artist names, etc.
 4. kill the dodSubmissionsHelper process
