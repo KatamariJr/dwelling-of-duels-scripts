@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editable Table</title>
+<!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">-->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<p id="problems"></p><p id="songCount"></p>
+<a href="https://s3.console.aws.amazon.com/s3/buckets/dwellingofduels-static-site?region=us-east-1&prefix=upload-form/&showversions=false" target="_blank">
+    <button>Open AWS Bucket</button>
+</a>
+
+<h1>Problems</h1>
+<div id="problemTable">
+    <!-- Table rows will be dynamically added here -->
+</div>
+
+<h1>Mains</h1>
+<table id="mainTable">
+    <!-- Table rows will be dynamically added here -->
+</table>
+
+<h1>Alts</h1>
+<table id="altTable">
+    <!-- Table rows will be dynamically added here -->
+</table>
+
+<h1>Deleted Entries</h1>
+<table id="deletedTable">
+    <!-- Table rows will be dynamically added here -->
+</table>
+
+<script src="script.js"></script>
+<script>
+    // Fetch data when the page loads
+    //import {fetchData} from "./static/script";
+
+    fetchSubmissionData();
+</script>
+</body>
+</html>

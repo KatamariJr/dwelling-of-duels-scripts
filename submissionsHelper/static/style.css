@@ -1,0 +1,13 @@
+input {
+    padding: 0 0 0 0 !important;
+    width: inherit !important;
+    pointer-events: all !important;
+}
+
+.changed {
+    background-color: #ffce15;
+}
+
+thead td{
+    cursor: pointer;
+}
