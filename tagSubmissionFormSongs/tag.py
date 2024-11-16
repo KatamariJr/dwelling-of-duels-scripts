@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 import json
 import os
@@ -6,12 +6,13 @@ import shutil
 import eyed3
 import sys
 
-MAX_TOTAL_FILENAME_LENGTH = 180
+MAX_TOTAL_FILENAME_LENGTH = 175
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
-ALBUM_NAME = "DoD23-10: Horror Games"
-YEAR = "2023"
+ALBUM_NAME = "DoD24-10: Aliens"
+YEAR = "2024"
 
-def renameAndCopy(isAlt: bool, trackNum: int|None, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
+
+def renameAndCopy(isAlt: bool, trackNum: int, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:
     extension = ""
     originalUUID = ""
     if "json" in srcFile.lower():
@@ -70,7 +71,7 @@ def renameAndCopy(isAlt: bool, trackNum: int|None, artistNames: str, gameNames: 
 def retag(targetFilename: str, trackNum: int, artistNames: str, gameNames: str, songTitle: str, albumName: str, coverImageFilename: str):
     audiofile = eyed3.load(targetFilename)
     if audiofile is None:
-        raise "File mp3 open fail!!!"
+        raise Exception(targetFilename + " mp3 open fail!!!")
     audiofile.initTag()
     audiofile.tag.artist = artistNames
     audiofile.tag.non_std_genre = gameNames
@@ -112,6 +113,8 @@ def main(resultsData: list[dict] | None = None) -> int:
         coverImage = fileDirectory + '/' + filename
         break
 
+    tagErrors = []
+
     for filename in fileDirectoryListing:
         if "json" not in filename:
             continue
@@ -133,11 +136,19 @@ def main(resultsData: list[dict] | None = None) -> int:
 
         # if resultsFile was passed in, try finding a placement record with same title
         if resultsData is not None and isAlt is not True:
+            matchingTitle = f"{gameNames.strip()} - {songTitle.strip()}".strip()
+            success = False
             for r in resultsData:
-                if r["songTitle"] == songTitle:
+                if r["songTitle"] == matchingTitle:
                     trackNum = r["place"]
+                    success = True
                     break
-            raise Exception(f"didnt find record for {songTitle} in results data")
+            if not success:
+                #raise Exception(f"didnt find record for {matchingTitle} in results data")
+                print(f"didnt find record for {matchingTitle} in results data")
+                #add this song name to the warnings we will print at the end
+                tagErrors.append(f"didnt find record for {matchingTitle} in results data")
+
 
         # create file for non-anonymized
         renameAndCopy(isAlt, trackNum, artistNames, gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongs', coverImage)
@@ -146,6 +157,9 @@ def main(resultsData: list[dict] | None = None) -> int:
         # create file for anonymized
         renameAndCopy(isAlt, None, "Anonymous DoD Contestant", gameNames, songTitle, ALBUM_NAME, fileDirectory + '/' + uuid + '.mp3', fileDirectory + '/newSongsAnon', coverImage)
 
+    if len(tagErrors) > 0:
+        for r in tagErrors:
+            print(r)
     print("Done\n")
     return 0
 

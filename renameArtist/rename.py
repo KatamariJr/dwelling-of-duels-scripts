@@ -5,7 +5,7 @@ import sys
 
 from mp3_tagger import MP3File, VERSION_1, VERSION_2, VERSION_BOTH
 
-SKIP_ARTIST_CHECK = True
+SKIP_ARTIST_CHECK = False
 
 def readFolderWithMP3s(directory, artistFind, artistReplace):
     print(directory)
@@ -44,7 +44,10 @@ def replaceArtistTags(fileLocation, artistFind, artistReplace):
 
 def replaceInFilename(fileLocation, artistFind, artistReplace):
     if artistFind in fileLocation:
-        choice = input("replace in %s (y/n)?" % fileLocation)
+        if SKIP_ARTIST_CHECK:
+            choice = "y"
+        else:
+            choice = input("replace in %s (y/n)?" % fileLocation)
         if choice == "y":
             newFileName = fileLocation.replace(artistFind, artistReplace)
             os.rename(fileLocation, newFileName)
@@ -57,6 +60,9 @@ if __name__ == '__main__':
         print("artistFind: " + artistFind)
         artistReplace = sys.argv[3]
         print("artistReplace: " + artistReplace)
+        if len(sys.argv) == 5 and sys.argv[4] == "--yes":
+           SKIP_ARTIST_CHECK = True
+           print("SKIP_ARTIST_CHECK")
     except:
         print("must have a folder path as first arg, original artist name as second arg, replacement artist name as third arg")
         exit(1)
