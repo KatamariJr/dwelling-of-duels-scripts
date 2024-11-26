@@ -1,4 +1,4 @@
-.PHONY: fromScratch clean download votes start
+.PHONY: fromScratch clean download votes helperServer
 
 fromScratch:
 	$(MAKE) clean
@@ -15,5 +15,5 @@ download:
 votes:
 	python ./votes_compile.py
 
-start:
-	python3 -m uvicorn votingNew:app --reload
+helperServer:
+	python3 -m uvicorn voting_helper:app --reload
