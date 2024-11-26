@@ -56,7 +56,11 @@ def processVoteData(dataArray: list[str]) -> dict:
         for j in dataArray[i + 1].split("\n"):
             line = j.strip().split(" / ")
             songName = ''.join(line[0].lower().split(" "))
-            songIndex = songsCondensed.index(songName)
+            try:
+                songIndex = songsCondensed.index(songName)
+            except:
+                print("missing song name '{}' from voter '{}'".format(songName, voter))
+                #raise
             words = line[1].split(" ")
             rating = ratingNames.index(words[0].lower())
             if words[-1].lower() != "song":
@@ -76,21 +80,26 @@ def processVoteData(dataArray: list[str]) -> dict:
     listOfListOfVotes = []
     for returningVoteList in theResults:
         listOfListOfVotes.append(returningVoteList.scores)
+        # check for votes that will result in NaN
+        if len(set(returningVoteList.scores)) == 1:  # all the numbers are the same
+            print("ERROR! BAD VOTES FROM {}".format(returningVoteList.voter))
+            raise()
 
     finalZScores = stats.zscore([res.scores for res in theResults], axis=1)
+    # print("finalZScores", finalZScores)
     for i in range(len(theResults)):
         if theResults[i].reviewed:
             print("reviewed")
             finalZScores[i] = [score * 1.2 for score in finalZScores[i]]
     averagedZScoresTotal = np.average(finalZScores, axis=0)
 
-    #do things aka calculateResults()
+    # do things aka calculateResults()
     theArray = averagedZScoresTotal
     finals = np.argsort(theArray)[::-1]  # flips the order so highest is first
 
-    print(finals)
-    print(averagesList)
-    print(theArray)
+    print("finals", finals)
+    print("averages", averagesList)
+    print("averagedZScoresTotal", theArray)
 
     highScore = averagesList[finals[0]]
     lowScore = averagesList[finals[-1]]
@@ -120,16 +129,16 @@ def processVoteData(dataArray: list[str]) -> dict:
         operand = "+"
         if adj < 0:
             operand = "-"
-        adj = np.abs(np.floor(adj * 100)/100)
+        adj = np.abs(np.floor(adj * 100) / 100)
 
-        #todo - used for color coding
-        #percentage = (theArray[finals[k]] - zLow) / (zHigh - zLow)
+        # todo - used for color coding
+        # percentage = (theArray[finals[k]] - zLow) / (zHigh - zLow)
 
-        #print(pulledScore, roundedScore, songs[finals[k]])
+        # print(pulledScore, roundedScore, songs[finals[k]])
 
         songName = songNames[finals[k]]
         returningVoteList.append({
-            "place": num+1,
+            "place": num + 1,
             "songTitle": songName,
             "rating": ratingNamesFull[roundedScore],
             "operand": operand,
@@ -140,12 +149,12 @@ def processVoteData(dataArray: list[str]) -> dict:
 
     returningDeviantList = []
 
-    #aka findDeviants()
+    # aka findDeviants()
     devTotals = []
     avgDev = 0
     for iScore in finalZScores:
         devTotal = 0
-        for j in range (0, len(iScore)):
+        for j in range(0, len(iScore)):
             jScore = iScore[j]
             devTotal += np.power(jScore - theArray[j], 2)
         devTotal /= len(iScore)
@@ -157,9 +166,10 @@ def processVoteData(dataArray: list[str]) -> dict:
 
     ia = np.argsort(devTotals)[::-1]
     for i in range(len(finalZScores)):
-        returningDeviantList.append({"voter": theResults[ia[i]].voter, "deviance": np.round(devTotals[ia[i]] * 100) / 100})
+        returningDeviantList.append(
+            {"voter": theResults[ia[i]].voter, "deviance": np.round(devTotals[ia[i]] * 100) / 100})
 
-    return {"results": returningVoteList, "deviants": returningDeviantList, "voterCount": len(dataArray)/2}
+    return {"results": returningVoteList, "deviants": returningDeviantList, "voterCount": len(dataArray) / 2}
 
 
 def guessArtistName(songList: list[dict], songName: str) -> str:
@@ -181,7 +191,6 @@ def saveProcess(dataArray: list[str]):
     return json_object
 
 
-
 @app.get("/loadFromFile")
 def indexRoute():
     theData = open('votes.txt', 'r').read()
@@ -191,14 +200,14 @@ def indexRoute():
     returnArray = []
 
     for k in range(0, len(dataArray), 2):
-        returnArray.append({"submitterEmail": dataArray[k], "votes": dataArray[k+1]})
+        returnArray.append({"submitterEmail": dataArray[k], "votes": dataArray[k + 1]})
 
     return returnArray
 
 
 @app.get("/loadFromS3")
 def s3Route():
-    bucketName = "dwellingofduels-static-site-dev"
+    bucketName = "dwellingofduels-static-site"
     results = s3.list_objects_v2(Bucket=bucketName, Prefix="voting-form/")
     parsedObjects = []
 
@@ -247,3 +256,4 @@ def readArtistMappingCSV():
 
 subprocess.run(["tsc"])
 readArtistMappingCSV()
+print("Helper can be accessed at http://localhost:8000/static/index.html")

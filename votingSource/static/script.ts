@@ -28,7 +28,7 @@ let sortMethod: "time"|"deviance"|"email"|string = "time";
 
 async function fetchVoteSubmissions() {
     try {
-        const response = await fetch('/loadFromS3');
+        const response = await fetch('/loadFromFile');
         voteSubmissionData = (await response.json() as votesSubmissions);
     } catch (error) {
         console.error('Error fetching data:', error);
