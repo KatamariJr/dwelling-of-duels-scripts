@@ -1,4 +1,4 @@
-.PHONY: tag fromScratch download lyrics cleanTaggedSongs cleanDownloadedData download songs.csv
+.PHONY: tag fromScratch download lyrics cleanTaggedSongs cleanDownloadedData download songs.csv update
 
 tagResultsWithLyrics:
 	$(MAKE) tagResults
@@ -16,7 +16,9 @@ tag:
 	$(MAKE) cleanTaggedSongs
 	python tag.py
 
-list:
+list: songs.csv
+
+songs.csv:
 	python list.py
 
 lyrics:
