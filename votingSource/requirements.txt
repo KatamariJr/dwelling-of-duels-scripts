@@ -1,0 +1,7 @@
+boto3==1.34.11
+fastapi==0.115.5
+numpy==1.24.4
+scipy==1.14.1
+setuptools==69.0.3
+typing_extensions==4.12.2
+uvicorn==0.25.0
