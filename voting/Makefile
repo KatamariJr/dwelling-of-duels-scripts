@@ -1,4 +1,4 @@
-.PHONY: fromScratch clean download votes
+.PHONY: fromScratch clean download votes start
 
 fromScratch:
 	$(MAKE) clean
@@ -6,11 +6,14 @@ fromScratch:
 	$(MAKE) votes
 
 clean:
-	rm -r ./files
-	rm ./votes.txt
+	rm -rf ./files
+	rm -f ./votes.txt
 
 download:
 	./download.sh
 
 votes:
 	python ./votes_compile.py
+
+start:
+	python3 -m uvicorn votingNew:app --reload
