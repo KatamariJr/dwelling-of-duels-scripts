@@ -11,11 +11,11 @@ import (
 func main() {
 	port := 4000
 	srv := server.New(port)
-	log.Printf("listening at %d\n", port)
 	browserErr := openbrowser(fmt.Sprintf("http://localhost:%d", port))
 	if browserErr != nil {
 		log.Printf("Attempted to helpfully open browser but failed: %s\n", browserErr)
 	}
+	log.Printf("listening at %d\n", port)
 	log.Fatal(srv.ListenAndServe())
 }
 

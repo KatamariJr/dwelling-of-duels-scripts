@@ -27,7 +27,6 @@ Generator - `~/dwelling-of-duels/generator`
    into the `/upload-form-archive/mon-yyyy/` folder
    1. TODO - modify the votes archive script to also work on this step
 2. Navigate to the **SubmissionsHelper** directory and start the tool by using `make run` and browse to it at `localhost:4000`
-   1. TODO - make this auto open the browser page
 3. Address any song submissions that need to be changed.
    1. Check for the same song being resubmitted. In this case, delete the older entry after ensuring the tags are the same.
    2. Check for Artist+Game Names that are incorrect. They should match what is used on the rest of the site, with 
@@ -48,7 +47,7 @@ Generator - `~/dwelling-of-duels/generator`
 3. Navigate to the **Votes Helper** directory and run the `votes_archive.py` script to archive previous month's votes. 
    Follow the prompts.
 4. Create the `votes.txt` file by using `make fromScratch`.
-5. Run the tally server by using `make helperServer`, and visit it from Firefox at `localhost:8000/static/index.html`
+5. Run the tally server by using `make helper`, and visit it from Firefox at `localhost:8000/static/index.html`
 6. Make any changes to the votes by clicking the checkboxes. The leftmost checkbox will consider this vote for results. You
    can uncheck it to essentially ignore a vote submission. The rightmost checkbox can be checked to indicate the submitter
    gave reviews and their vote should be weighted.
