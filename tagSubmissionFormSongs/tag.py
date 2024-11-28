@@ -5,11 +5,20 @@ import os
 import shutil
 import eyed3
 import sys
+import configparser
 
 MAX_TOTAL_FILENAME_LENGTH = 175
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
-ALBUM_NAME = "DoD24-10: Aliens"
-YEAR = "2024"
+
+parser = configparser.ConfigParser()
+parser.read('tagInfo.cfg')
+config = parser['dod_tag']
+ALBUM_NAME = config.get('monthName')
+YEAR = config.get('year')
+
+if ALBUM_NAME is None or YEAR is None:
+    print("monthName or year not found in tagInfo.cfg")
+    sys.exit(1)
 
 
 def renameAndCopy(isAlt: bool, trackNum: int, artistNames: str, gameNames: str, songTitle: str, albumName: str, srcFile: str, outputDirectory: str, coverImageFilename: str) -> None:

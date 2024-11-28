@@ -37,7 +37,6 @@ All instructions in this file assuming you are using the Terminal.
 5. Navigate to the **Tag Submission Form Songs** directory, update tag.py with the new month's album name, and insert
    the new album art file in the `files` directory.
     1. TODO make a system to get artwork files into the amazon workspace computer since we cant upload into a linux workspace machine.
-    2. TODO make the script pull the month name from a config file.
 6. In the same directory, run `make fromScratch`. This removes all old downloaded files, redownloads, and tags them all.
     1. Note: Any messages like "Non standard genre name" that you see can be safely ignored.
 7. When completed, copy all the anonymous songs from `/tagSubmissionFormSongs/files/newSongsAnon` and put them in the
@@ -72,8 +71,6 @@ All instructions in this file assuming you are using the Terminal.
 # TODO
 - need a way to update an entry with a new mp3 easily. needs to put it up to s3 so its stored for future pulls
 - add button to auto archive the previous month's tracks. names the folders automatically (or at least provides a default automatically)
-- make a script that can auto generate the variants of the banner art that I need
-- make the `tag.py` script read the month name info from a cfg file so we dont have to edit the source every month
 - make the voting tally script auto-flag anybody who has too many "average +0.00" votes because those are usually incomplete
 - add a button to let me view the raw json for an entry (and maybe edit)
 - make a way to alert the submitter of a song if a voter had submitted high deviance votes that strongly favored the submitter (ballot stuffing), just include the email address and a generic notice. we could then track how many times this happens
