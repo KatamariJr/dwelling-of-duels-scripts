@@ -21,39 +21,43 @@ Tag Submission Form Songs - `~/dwelling-of-duels/scripts/tagSubmissionFormSongs`
 Votes Helper - `~/dwelling-of-duels/scripts/voting`
 Generator - `~/dwelling-of-duels/generator`
 
+# Note
+All instructions in this file assuming you are using the Terminal.
 
 # Tagging new submissions
-1. Archive all old submissions from the previous month from the aws s3 bucket. No script for this yet, just move them 
+1. Archive all old submissions from the previous month from the aws s3 bucket. No script for this yet, just move them
    into the `/upload-form-archive/mon-yyyy/` folder
-   1. TODO - modify the votes archive script to also work on this step
+    1. TODO - modify the votes archive script to also work on this step
 2. Navigate to the **SubmissionsHelper** directory and start the tool by using `make run` and browse to it at `localhost:4000`
 3. Address any song submissions that need to be changed.
-   1. Check for the same song being resubmitted. In this case, delete the older entry after ensuring the tags are the same.
-   2. Check for Artist+Game Names that are incorrect. They should match what is used on the rest of the site, with 
-      exactly the same punctuation and capitalization.
+    1. Check for the same song being resubmitted. In this case, delete the older entry after ensuring the tags are the same.
+    2. Check for Artist+Game Names that are incorrect. They should match what is used on the rest of the site, with
+       exactly the same punctuation and capitalization.
 4. Terminate the dodSubmissionsHelper by focusing on the window and pressing Control+C
-5. Navigate to the **Tag Submission Form Songs** directory, update tag.py with the new month's album name, and insert 
+5. Navigate to the **Tag Submission Form Songs** directory, update tag.py with the new month's album name, and insert
    the new album art file in the `files` directory.
-   1. TODO make a system to get artwork files into the amazon workspace computer since we cant upload into a linux machine.
+    1. TODO make a system to get artwork files into the amazon workspace computer since we cant upload into a linux workspace machine.
+    2. TODO make the script pull the month name from a config file.
 6. In the same directory, run `make fromScratch`. This removes all old downloaded files, redownloads, and tags them all.
-7. When completed, copy all the anonymous songs from `/tagSubmissionFormSongs/files/newSongsAnon` and put them in the 
+    1. Note: Any messages like "Non standard genre name" that you see can be safely ignored.
+7. When completed, copy all the anonymous songs from `/tagSubmissionFormSongs/files/newSongsAnon` and put them in the
    appropriate month folder in the **Generator** project.
 
 
 # Tallying votes and tagging results
 1. update any incorrect tags for songs by running the **SubmissionsHelper** server mentioned in `Tagging New Submissions` above.
-2. Navigate to the **Tag Submission Form Songs** directory and run `make songs.csv`. Copy this file to the 
+2. Navigate to the **Tag Submission Form Songs** directory and run `make songs.csv`. Copy this file to the
    **Votes Helper** directory
-3. Navigate to the **Votes Helper** directory and run the `votes_archive.py` script to archive previous month's votes. 
+3. Navigate to the **Votes Helper** directory and run the `votes_archive.py` script to archive previous month's votes.
    Follow the prompts.
 4. Create the `votes.txt` file by using `make fromScratch`.
 5. Run the tally server by using `make helper`, and visit it from Firefox at `localhost:8000/static/index.html`
 6. Make any changes to the votes by clicking the checkboxes. The leftmost checkbox will consider this vote for results. You
    can uncheck it to essentially ignore a vote submission. The rightmost checkbox can be checked to indicate the submitter
    gave reviews and their vote should be weighted.
-   1. TODO - clean up the formatting of all the NaN values
+    1. TODO - clean up the formatting of all the NaN values
 7. Copy and save the text content from the left page to a notepad file so we can post it later
-   1. TODO - there is no reason why the Save Results button shouldnt also save the contents of this pane to a file.
+    1. TODO - there is no reason why the Save Results button shouldnt also save the contents of this pane to a file.
 8. Click `Save Results`. This writes to the `results.json` file in **Votes Helper** directory.
 9. Open up `results.json` in the text editor. Correct any "ARTIST" fields that didnt auto fill.
 10. copy the `results.json` file created in the last step to the **Tag Submissions Form Songs** directory.
