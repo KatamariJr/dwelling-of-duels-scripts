@@ -10,11 +10,15 @@ import configparser
 MAX_TOTAL_FILENAME_LENGTH = 175
 MINIMUM_CHARACTERS_PER_FILENAME_FIELD = 10
 
-parser = configparser.ConfigParser()
-parser.read('tagInfo.cfg')
-config = parser['dod_tag']
-ALBUM_NAME = config.get('monthName')
-YEAR = config.get('year')
+try:
+    parser = configparser.ConfigParser()
+    parser.read('tagInfo.cfg')
+    config = parser['dod_tag']
+    ALBUM_NAME = config.get('monthName')
+    YEAR = config.get('year')
+except KeyError:
+    print("tagInfo.cfg not found, or missing [dod_tag] section")
+    sys.exit(1)
 
 if ALBUM_NAME is None or YEAR is None:
     print("monthName or year not found in tagInfo.cfg")
@@ -78,6 +82,11 @@ def renameAndCopy(isAlt: bool, trackNum: int, artistNames: str, gameNames: str, 
 
 
 def retag(targetFilename: str, trackNum: int, artistNames: str, gameNames: str, songTitle: str, albumName: str, coverImageFilename: str):
+    try:
+        imageBytes = open(coverImageFilename, 'rb').read()
+    except FileNotFoundError:
+        print("Missing jpg for cover image in this folder!")
+        sys.exit(1)
     audiofile = eyed3.load(targetFilename)
     if audiofile is None:
         raise Exception(targetFilename + " mp3 open fail!!!")
@@ -89,11 +98,6 @@ def retag(targetFilename: str, trackNum: int, artistNames: str, gameNames: str, 
     audiofile.tag.recording_date = YEAR
     audiofile.tag.comments.set('www.dwellingofduels.net')
     audiofile.tag.track_num = trackNum
-    imageBytes = None
-    try:
-        imageBytes = open(coverImageFilename, 'rb').read()
-    except:
-        print("Missing jpg for cover image in this folder!")
     audiofile.tag.images.set(3, imageBytes, 'image/jpeg')
 
     audiofile.tag.save()
