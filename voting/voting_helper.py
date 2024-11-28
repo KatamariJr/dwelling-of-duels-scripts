@@ -1,13 +1,14 @@
+import csv
 import json
 import subprocess
-import csv
+import webbrowser
+from typing import List
 
 import boto3
 import numpy as np
-from scipy import stats
-from typing import TypedDict, List
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
+from scipy import stats
 
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -257,3 +258,4 @@ def readArtistMappingCSV():
 subprocess.run(["tsc"])
 readArtistMappingCSV()
 print("Helper can be accessed at http://localhost:8000/static/index.html")
+webbrowser.open('http://localhost:8000/static/index.html')
