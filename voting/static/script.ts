@@ -108,10 +108,9 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement) {
 
         let voteDate = new Date(Date.parse(v.submissionTime));
 
-
         let voter = document.createElement("label");
         voter.setAttribute("for", String(i));
-        voter.textContent = `${v.submitterEmail} : ${voteDate.getMonth()}-${voteDate.getDate()} ${voteDate.getHours()}:${voteDate.getMinutes()}  deviance: ${v.deviance}`;
+        voter.textContent = `${v.submitterEmail} : ${voteDate.getMonth().toString().padStart(2, '0')}-${voteDate.getDate().toString().padStart(2, '0')} ${voteDate.getHours().toString().padStart(2, '0')}:${voteDate.getMinutes().toString().padStart(2, '0')}  deviance: ${v.deviance}`;
 
         let disableCheckBox = document.createElement("input");
         disableCheckBox.type = "checkbox";

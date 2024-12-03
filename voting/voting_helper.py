@@ -201,7 +201,15 @@ def indexRoute():
     returnArray = []
 
     for k in range(0, len(dataArray), 2):
-        returnArray.append({"submitterEmail": dataArray[k], "votes": dataArray[k + 1]})
+        splitValues = dataArray[k].split(" ")
+        email = splitValues[0]
+        submissionTime = splitValues[1]
+        uuid = splitValues[2]
+        returnArray.append({"submitterEmail": email,
+                            "votes": dataArray[k + 1],
+                            "submissionTime": submissionTime,
+                            "uuid": uuid
+                            })
 
     return returnArray
 
