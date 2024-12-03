@@ -115,6 +115,7 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement) {
         let disableCheckBox = document.createElement("input");
         disableCheckBox.type = "checkbox";
         disableCheckBox.id = String(i);
+        disableCheckBox.title = "Strike these votes from the results";
         if (disabledCheckedIndexes.includes(i)) {
             voter.classList.add("strike")
         }
@@ -133,6 +134,7 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement) {
 
         let reviewedCheckBox = document.createElement("input")
         reviewedCheckBox.type = "checkbox";
+        reviewedCheckBox.title = "This voter left reviews";
         if (reviewedCheckedIndexes.includes(i)) {
             voter.classList.add("highlight")
         }
