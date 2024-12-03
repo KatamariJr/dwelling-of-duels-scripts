@@ -19,6 +19,7 @@ type votesSubmissions = {
     votes: string
     submitterEmail: string
     deviance: number
+    uuid: string
 }[]
 
 let voteSubmissionData: votesSubmissions|null = null;
@@ -109,7 +110,8 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement) {
         let voteDate = new Date(Date.parse(v.submissionTime));
 
         let voter = document.createElement("span");
-        voter.textContent = `${v.submitterEmail} : ${voteDate.getMonth().toString().padStart(2, '0')}-${voteDate.getDate().toString().padStart(2, '0')} ${voteDate.getHours().toString().padStart(2, '0')}:${voteDate.getMinutes().toString().padStart(2, '0')}  deviance: ${v.deviance}`;
+        let voterShortUUID = v.uuid.substring(0, 4);
+        voter.textContent = `${v.submitterEmail} (${voterShortUUID}): ${voteDate.getMonth().toString().padStart(2, '0')}-${voteDate.getDate().toString().padStart(2, '0')} ${voteDate.getHours().toString().padStart(2, '0')}:${voteDate.getMinutes().toString().padStart(2, '0')}  deviance: ${v.deviance}`;
         voter.classList.add("clickable");
 
         voter.addEventListener("click", () => {
