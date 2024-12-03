@@ -108,9 +108,13 @@ function displayVoteSubmissions(containingDiv: HTMLDivElement) {
 
         let voteDate = new Date(Date.parse(v.submissionTime));
 
-        let voter = document.createElement("label");
-        voter.setAttribute("for", String(i));
+        let voter = document.createElement("span");
         voter.textContent = `${v.submitterEmail} : ${voteDate.getMonth().toString().padStart(2, '0')}-${voteDate.getDate().toString().padStart(2, '0')} ${voteDate.getHours().toString().padStart(2, '0')}:${voteDate.getMinutes().toString().padStart(2, '0')}  deviance: ${v.deviance}`;
+        voter.classList.add("clickable");
+
+        voter.addEventListener("click", () => {
+            putVotesInTextArea(<HTMLDivElement>document.getElementById('bottom'), v.submitterEmail, i);
+        });
 
         let disableCheckBox = document.createElement("input");
         disableCheckBox.type = "checkbox";
@@ -203,6 +207,25 @@ async function sendVoteSubmissions(endpoint: string, displayOutput: boolean) {
     } catch (error) {
         throw new Error('Error saving data: ' +  error);
     }
+
+}
+
+function putVotesInTextArea(element: HTMLDivElement, name: string, voteIndex: number) {
+    if (voteSubmissionData === null) {
+        return;
+    }
+    element.textContent = "";
+    let vote = voteSubmissionData[voteIndex];
+    let titleDiv = document.createElement("div");
+    titleDiv.id = "titleDiv";
+    let title = document.createElement("h3");
+    title.textContent = "Votes for " + name;
+    titleDiv.classList.add("stickyTop")
+    titleDiv.append(title);
+    element.append(titleDiv)
+    let vDiv = document.createElement("div");
+    vDiv.textContent = vote.votes;
+    element.append(vDiv);
 
 }
 

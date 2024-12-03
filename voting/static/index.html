@@ -6,15 +6,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <p id="problems"></p>
-    <span></span>
     <div id="left">
         <h1>Results</h1>
+        <button onclick="postVoteSubmissionsToSave()">Save Results</button>
         <table id="leftTable">
             <!-- Table rows will be dynamically added here -->
         </table>
         <textarea id="leftTextArea"></textarea>
-        <button onclick="postVoteSubmissionsToSave()">Save Results</button>
+
     </div>
     <div id="right">
         <h1>Votes</h1>
@@ -25,6 +24,9 @@
             <option value="deviance">Deviance</option>
         </select>
         <div id="rightGrid">Loading...</div>
+    </div>
+    <div id="bottom">
+        Click on a row to view the votes in detail.
     </div>
 
     <script src="script.js"></script>
