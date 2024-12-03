@@ -167,7 +167,9 @@ async function postVoteSubmissionsToGetResults() {
 }
 
 async function postVoteSubmissionsToSave() {
-    return sendVoteSubmissions("/saveResults", false)
+    return sendVoteSubmissions("/saveResults", false).then(() => {
+        showModal("Results saved to results.json and results_for_discord.txt")
+    })
 }
 
 async function sendVoteSubmissions(endpoint: string, displayOutput: boolean) {
@@ -196,7 +198,6 @@ async function sendVoteSubmissions(endpoint: string, displayOutput: boolean) {
         });
 
         if (response.ok) {
-            console.log('Votes processed successfully!');
             if (displayOutput){
                 jsonData = await response.json();
                 displayVoteResults(leftTextArea, jsonData);

@@ -189,6 +189,10 @@ def saveProcess(dataArray: list[str]):
     with open("results.json", "w") as outfile:
         outfile.write(json_object)
 
+    with open("results_for_discord.txt", "w") as outfile:
+        for item in processResults['results']:
+            outfile.write(f"#{item['place']} {item['artist']} - {item['songTitle']} - {item['rating']} {item['operand']}{item['adjustment']}\n")
+
     return json_object
 
 
@@ -237,19 +241,6 @@ def s3Route():
                 print(f"Error parsing JSON file {obj['Key']}: {e}")
 
     return parsedObjects
-
-
-def oldLoadFromFile():
-    theData = open('votes.txt', 'r').read()
-    # split the text file by double carriage return
-    dataArray = theData.split("\n\n")
-
-    voteDataResults = processVoteData(dataArray)
-    for vdr in voteDataResults[0]:
-        print(f"#{vdr[0]} Artist - {vdr[1]} - {vdr[2]} {vdr[3]}{vdr[4]}")
-
-    for bar in voteDataResults[1]:
-        print(f"{bar[0]}: {bar[1]}")
 
 
 @app.get("/reload")

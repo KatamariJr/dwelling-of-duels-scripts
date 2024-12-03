@@ -54,9 +54,7 @@ All instructions in this file assuming you are using the Terminal.
 6. Make any changes to the votes by clicking the checkboxes. The leftmost checkbox will consider this vote for results. You
    can uncheck it to essentially ignore a vote submission. The rightmost checkbox can be checked to indicate the submitter
    gave reviews and their vote should be weighted.
-    1. TODO - clean up the formatting of all the NaN values
 7. Copy and save the text content from the left page to a notepad file so we can post it later
-    1. TODO - there is no reason why the Save Results button shouldnt also save the contents of this pane to a file.
 8. Click `Save Results`. This writes to the `results.json` file in **Votes Helper** directory.
 9. Open up `results.json` in the text editor. Correct any "ARTIST" fields that didnt auto fill.
 10. copy the `results.json` file created in the last step to the **Tag Submissions Form Songs** directory.
@@ -74,7 +72,6 @@ All instructions in this file assuming you are using the Terminal.
 - make the voting tally script auto-flag anybody who has too many "average +0.00" votes because those are usually incomplete
 - add a button to let me view the raw json for an entry (and maybe edit)
 - make a way to alert the submitter of a song if a voter had submitted high deviance votes that strongly favored the submitter (ballot stuffing), just include the email address and a generic notice. we could then track how many times this happens
-- view raw vote submissions directly from the voting tally tool
 
 
 # notes on downloader from first/second real use case (this section is very old)
