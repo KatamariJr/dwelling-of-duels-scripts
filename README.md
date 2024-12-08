@@ -34,9 +34,8 @@ All instructions in this file assuming you are using the Terminal.
     2. Check for Artist+Game Names that are incorrect. They should match what is used on the rest of the site, with
        exactly the same punctuation and capitalization.
 4. Terminate the dodSubmissionsHelper by focusing on the window and pressing Control+C
-5. Navigate to the **Tag Submission Form Songs** directory, update tag.py with the new month's album name, and insert
+5. Navigate to the **Tag Submission Form Songs** directory, update tagInfo.cfg with the new month's album name, and insert
    the new album art file in the `files` directory.
-    1. TODO make a system to get artwork files into the amazon workspace computer since we cant upload into a linux workspace machine.
 6. In the same directory, run `make fromScratch`. This removes all old downloaded files, redownloads, and tags them all.
     1. Note: Any messages like "Non standard genre name" that you see can be safely ignored.
 7. When completed, copy all the anonymous songs from `/tagSubmissionFormSongs/files/newSongsAnon` and put them in the
