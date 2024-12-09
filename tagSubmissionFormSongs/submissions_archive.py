@@ -6,7 +6,7 @@ import json
 import datetime
 import time
 
-BUCKET_NAME = 'dwellingofduels-static-site-dev'
+BUCKET_NAME = 'dwellingofduels-static-site'
 SUBMISSIONS_FOLDER = 'upload-form'
 ARCHIVE_FOLDER = 'upload-form-archive'
 
