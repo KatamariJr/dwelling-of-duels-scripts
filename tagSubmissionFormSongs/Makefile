@@ -51,3 +51,6 @@ fromScratch:
 
 update: # sync changed json files back up to s3
 	aws s3 sync --exclude=* --include=*.json --include=*.mp3 --exclude="newSongs/*" --exclude="newSongsAnon/*" --exclude="deleted" ./files s3://dwellingofduels-static-site/upload-form
+
+archive:
+	python3 ./submissions_archive.py

@@ -13,7 +13,10 @@ download:
 	./download.sh
 
 votes:
-	python ./votes_compile.py
+	python3 ./votes_compile.py
+
+archive:
+	python3 ./votes_archive.py
 
 helper:
 	python3 -m uvicorn voting_helper:app --reload

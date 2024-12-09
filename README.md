@@ -25,10 +25,11 @@ Generator - `~/dwelling-of-duels/generator`
 All instructions in this file assuming you are using the Terminal.
 
 # Tagging new submissions
-1. Archive all old submissions from the previous month from the aws s3 bucket. No script for this yet, just move them
-   into the `/upload-form-archive/mon-yyyy/` folder
-    1. TODO - modify the votes archive script to also work on this step
-2. Navigate to the **SubmissionsHelper** directory and start the tool by using `make run` and browse to it at `localhost:4000`
+1. Navigate to the **SubmissionsHelper** directory. Archive all old submissions from the previous month by using
+   `make archive`. This will attempt to automatically decide what submissions should be archived based on their
+   submission date. There is a confirmation step before anything is actually moved. Ensure that all listed dates
+   accurately represent the submission window for the previous duel.
+2. Still in the **SubmissionsHelper** directory, start the helper tool by using `make run` and browse to it at `localhost:4000`
 3. Address any song submissions that need to be changed.
     1. Check for the same song being resubmitted. In this case, delete the older entry after ensuring the tags are the same.
     2. Check for Artist+Game Names that are incorrect. They should match what is used on the rest of the site, with
@@ -38,8 +39,9 @@ All instructions in this file assuming you are using the Terminal.
    the new album art file in the `files` directory.
 6. In the same directory, run `make fromScratch`. This removes all old downloaded files, redownloads, and tags them all.
     1. Note: Any messages like "Non standard genre name" that you see can be safely ignored.
-7. When completed, copy all the anonymous songs from `/tagSubmissionFormSongs/files/newSongsAnon` and put them in the
-   appropriate month folder in the **Generator** project.
+7. When completed, copy all the anonymous songs from `files/newSongsAnon` and put them in the appropriate month folder 
+   in the **Generator** project.
+8. Generate website as normal. (see the README in the **Generator** project)
 
 
 # Tallying votes and tagging results
@@ -58,8 +60,9 @@ All instructions in this file assuming you are using the Terminal.
 9. Open up `results.json` in the text editor. Correct any "ARTIST" fields that didnt auto fill.
 10. copy the `results.json` file created in the last step to the **Tag Submissions Form Songs** directory.
 11. run `make tagResultsWithLyrics`.
-12. copy all the songs from `newSongs` over to the generator's correct dodarchive directory
-13. spot check all the tagged MP3 files and make corrections with MP3Tag if needed.
+12. copy all the songs from folder `files/newSongs` over to the generator's correct dodarchive directory.
+13. Generate website as normal. (see the README in the **Generator** project)
+14. spot check all the tagged MP3 files and make corrections with MP3Tag if needed.
 
 
 
@@ -67,9 +70,8 @@ All instructions in this file assuming you are using the Terminal.
 
 # TODO
 - need a way to update an entry with a new mp3 easily. needs to put it up to s3 so its stored for future pulls
-- add button to auto archive the previous month's tracks. names the folders automatically (or at least provides a default automatically)
 - make the voting tally script auto-flag anybody who has too many "average +0.00" votes because those are usually incomplete
-- add a button to let me view the raw json for an entry (and maybe edit)
+- add a button to let us view the raw json for an entry (and maybe edit)
 - make a way to alert the submitter of a song if a voter had submitted high deviance votes that strongly favored the submitter (ballot stuffing), just include the email address and a generic notice. we could then track how many times this happens
 
 
