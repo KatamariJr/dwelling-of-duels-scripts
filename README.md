@@ -25,11 +25,12 @@ Generator - `~/dwelling-of-duels/generator`
 All instructions in this file assuming you are using the Terminal.
 
 # Tagging new submissions
-1. Navigate to the **SubmissionsHelper** directory. Archive all old submissions from the previous month by using
+1. Navigate to the **Tag Submission Form Songs** directory. Archive all old submissions from the previous month by using
    `make archive`. This will attempt to automatically decide what submissions should be archived based on their
    submission date. There is a confirmation step before anything is actually moved. Ensure that all listed dates
    accurately represent the submission window for the previous duel.
-2. Still in the **SubmissionsHelper** directory, start the helper tool by using `make run` and browse to it at `localhost:4000`
+   1. If the listed dates are incorrect, manual archiving must be performed in the s3 bucket. Contact Katajun
+2. Navigate to the **SubmissionsHelper** directory, start the helper tool by using `make run` and browse to it at `localhost:4000`
 3. Address any song submissions that need to be changed.
     1. Check for the same song being resubmitted. In this case, delete the older entry after ensuring the tags are the same.
     2. Check for Artist+Game Names that are incorrect. They should match what is used on the rest of the site, with
