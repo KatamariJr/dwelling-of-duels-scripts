@@ -37,11 +37,13 @@ All instructions in this file assuming you are using the Terminal.
        exactly the same punctuation and capitalization.
 4. Terminate the dodSubmissionsHelper by focusing on the window and pressing Control+C
 5. Navigate to the **Tag Submission Form Songs** directory, update tagInfo.cfg with the new month's album name, and insert
-   the new album art file in the `files` directory.
-6. In the same directory, run `make fromScratch`. This removes all old downloaded files, redownloads, and tags them all.
+   the new album art file in the `files` directory. Delete the old album art file.
+   1. You probably want the `YY-MM-Theme_Small.jpg` file.
+6. In the same directory, run `make fromScratch`. This removes all downloaded mp3+json files, redownloads, and tags them all.
     1. Note: Any messages like "Non standard genre name" that you see can be safely ignored.
 7. When completed, copy all the anonymous songs from `files/newSongsAnon` and put them in the appropriate month folder 
    in the **Generator** project.
+8. In the **Generator** directory, update the `site.cfg` file with the new
 8. Generate website as normal. (see the README in the **Generator** project)
 
 
@@ -49,7 +51,7 @@ All instructions in this file assuming you are using the Terminal.
 1. update any incorrect tags for songs by running the **SubmissionsHelper** server mentioned in `Tagging New Submissions` above.
 2. Navigate to the **Tag Submission Form Songs** directory and run `make songs.csv`. Copy this file to the
    **Votes Helper** directory
-3. Navigate to the **Votes Helper** directory and run the `votes_archive.py` script to archive previous month's votes.
+3. Navigate to the **Votes Helper** directory and run `make archive` to archive previous month's votes.
    Follow the prompts.
 4. Create the `votes.txt` file by using `make fromScratch`.
 5. Run the tally server by using `make helper`, and visit it from Firefox at `localhost:8000/static/index.html`
