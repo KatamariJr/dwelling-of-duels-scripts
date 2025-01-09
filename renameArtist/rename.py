@@ -32,7 +32,7 @@ def replaceArtistTags(fileLocation, artistFind, artistReplace):
             if SKIP_ARTIST_CHECK:
                 choice = "y"
             else:
-                choice = input("replace in %s (y/n)?" % artistTag)
+                choice = input("replace in tag: '%s' (y/n)?" % artistTag)
             if choice == "y":
                 # do the replace
                 artistTag = artistTag.replace(artistFind, artistReplace)
@@ -47,7 +47,7 @@ def replaceInFilename(fileLocation, artistFind, artistReplace):
         if SKIP_ARTIST_CHECK:
             choice = "y"
         else:
-            choice = input("replace in %s (y/n)?" % fileLocation)
+            choice = input("replace in filename: '%s' (y/n)?" % fileLocation)
         if choice == "y":
             newFileName = fileLocation.replace(artistFind, artistReplace)
             os.rename(fileLocation, newFileName)
@@ -71,4 +71,5 @@ if __name__ == '__main__':
         sys.exit('Error: `{}` must be in {}'.format(directory, os.getcwd()))
 
     for d in os.listdir(directory):
-        readFolderWithMP3s(os.path.join(directory, d), artistFind, artistReplace)
+        if os.path.isdir(os.path.join(directory, d)):
+            readFolderWithMP3s(os.path.join(directory, d), artistFind, artistReplace)
