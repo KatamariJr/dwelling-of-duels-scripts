@@ -61,9 +61,9 @@ All instructions in this file assuming you are using the Terminal.
 7. Copy and save the text content from the left page to a notepad file so we can post it later
 8. Click `Save Results`. This writes to the `results.json` file in **Votes Helper** directory.
 9. Open up `results.json` in the text editor. Correct any "ARTIST" fields that didnt auto fill.
-10. copy the `results.json` file created in the last step to the **Tag Submissions Form Songs** directory.
-11. run `make tagResultsWithLyrics`.
-12. copy all the songs from folder `files/newSongs` over to the generator's correct dodarchive directory.
+10. copy the `results.json` file created in the last step to the **Tag Submission Form Songs** directory.
+11. Navigate to the **Tag Submission Form Songs** directory, and run `make tagResultsWithLyrics`.
+12. copy all the songs from folder `files/newSongs` over to the generator's appropriate dodarchive directory.
 13. Generate website as normal. (see the README in the **Generator** project)
 14. spot check all the tagged MP3 files and make corrections with MP3Tag if needed.
 
