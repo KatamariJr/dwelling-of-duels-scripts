@@ -40,8 +40,8 @@ def processVoteData(dataArray: list[str]) -> dict:
         songTitle = i.split(" / ")[0]
         songNames.append(songTitle)
         songsCondensed.append(''.join(songTitle.lower().split(" ")))
-    ratingNames = ["terrible", "bad", "below", "average", "above", "good", "incredible", "my"]
-    ratingNamesFull = ["terrible", "bad", "below average", "average", "above average", "good", "incredible"]
+    ratingNames = ["bad", "poor", "subpar", "average", "good", "great", "incredible", "my"]
+    ratingNamesFull = ["bad", "poor", "subpar", "average", "good", "great", "incredible"]
 
     # parse the score ratings (aka sortData())
     voters = []
