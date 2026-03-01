@@ -1,6 +1,8 @@
 let currentSortKey = null;
 let mainSubmissionDataResults;
 let altSubmissionDataResults;
+let problemSubmissionDataResults;
+let deletedSubmissionDataResults;
 let sortedMainSubmissionResultIndexes = null;
 let sortedAltSubmissionResultIndexes = null;
 // Function to fetch JSON data from the server
@@ -13,25 +15,47 @@ async function fetchSubmissionData() {
     catch (error) {
         console.error('Error fetching data:', error);
     }
-    if (jsonData.problemIDs.length > 0) {
-        let problemsParagraph = document.getElementById('problems');
-        problemsParagraph.textContent = "PROBLEMS: NO MP3: " + jsonData.problemIDs.join(", ");
-    }
-    //filter data based on IsAlt and display in either table
+    //filter data into problem, main, alt, and deleted lists
     mainSubmissionDataResults = jsonData.data.filter((v) => {
         return v.isAlt === "false";
     });
     altSubmissionDataResults = jsonData.data.filter((v) => {
         return v.isAlt === "true";
     });
+    console.debug(jsonData);
+    problemSubmissionDataResults = jsonData.data.filter((v, index, array) => {
+        return jsonData.problems.map(value => value.id).includes(v.uuid);
+    });
+    console.debug(problemSubmissionDataResults);
+    deletedSubmissionDataResults = jsonData.deletedData;
     const mainTable = document.getElementById('mainTable');
     const altTable = document.getElementById('altTable');
+    const problemDiv = document.getElementById('problemTable');
+    const deletedTable = document.getElementById('deletedTable');
     if (mainSubmissionDataResults.length > 0) {
         displayData(mainTable, "main");
     }
     if (altSubmissionDataResults.length > 0) {
         displayData(altTable, "alt");
     }
+    if (problemSubmissionDataResults.length > 0) {
+        //TODO show this in a separate location with buttons to remove them
+        problemSubmissionDataResults.forEach((v, i) => {
+            let p = document.createElement("p");
+            p.textContent = `orphaned song data: ${v.songTitle} by ${v.artistNames}`;
+            let pButton = document.createElement("button");
+            pButton.textContent = "remove";
+            pButton.addEventListener("click", ev => {
+                showModal("nothing yet");
+            });
+            p.appendChild(pButton);
+            problemDiv.appendChild(p);
+        });
+    }
+    if (deletedSubmissionDataResults.length > 0) {
+        displayData(deletedTable, "deleted");
+    }
+    document.getElementById("songCount").textContent = `${jsonData.data.length} submissions, ${mainSubmissionDataResults.length} mains, ${altSubmissionDataResults.length} alts`;
 }
 const fieldNameList = [];
 const editableFieldNames = ["songTitle", "artistNames", "gameNames", "comments", "isAlt", "lyrics"];
@@ -55,11 +79,16 @@ function showModal(content) {
 function displayData(table, dataType) {
     table.replaceChildren();
     let data;
-    if (dataType === "main") {
-        data = mainSubmissionDataResults;
-    }
-    else if (dataType === "alt") {
-        data = altSubmissionDataResults;
+    switch (dataType) {
+        case "main":
+            data = mainSubmissionDataResults;
+            break;
+        case "alt":
+            data = altSubmissionDataResults;
+            break;
+        case "deleted":
+            data = deletedSubmissionDataResults;
+            break;
     }
     let indexes = Array.from(data.keys()).sort((a, b) => {
         if (currentSortKey === "submissionTime") {
@@ -90,6 +119,8 @@ function displayData(table, dataType) {
     let head = table.createTHead();
     //get title row names
     const row = head.insertRow();
+    row.insertCell();
+    fieldNameList.push("save");
     Object.keys(data[0]).forEach(key => {
         if (key === "identity") {
             return;
@@ -119,7 +150,55 @@ function displayData(table, dataType) {
                 saveButton.textContent = 'Save ❌';
             });
         });
+        const deleteButton = document.createElement('button');
+        if (dataType !== "deleted") {
+            deleteButton.textContent = 'Delete';
+            deleteButton.addEventListener('click', async () => {
+                deleteButton.textContent = 'Delete ⏳';
+                let uuid = item.uuid.endsWith(".json") ? item.uuid.substring(0, item.uuid.length - 5) : item.uuid;
+                const response = await fetch(`/delete/${uuid}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (response.ok) {
+                    deleteButton.textContent = 'Deleted ✔';
+                    removeChangedClassFromRow(table, visualIndex);
+                }
+                else {
+                    let errText = await response.text();
+                    showModal(errText);
+                    console.error(errText);
+                    deleteButton.textContent = 'Delete ❌';
+                }
+            });
+        }
+        else { //it is a deleted song
+            deleteButton.textContent = 'Un-delete';
+            deleteButton.addEventListener('click', async () => {
+                deleteButton.textContent = 'Un-delete ⏳';
+                let uuid = item.uuid.endsWith(".json") ? item.uuid.substring(0, item.uuid.length - 5) : item.uuid;
+                const response = await fetch(`/undelete/${uuid}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                });
+                if (response.ok) {
+                    deleteButton.textContent = 'Un-deleted ✔';
+                    removeChangedClassFromRow(table, visualIndex);
+                }
+                else {
+                    let errText = await response.text();
+                    showModal(errText);
+                    console.error(errText);
+                    deleteButton.textContent = 'Un-delete ❌';
+                }
+            });
+        }
         const row = body.insertRow();
+        row.insertCell().appendChild(saveButton);
         Object.keys(item).forEach(key => {
             const value = item[key];
             if (key === "identity") {
@@ -133,6 +212,12 @@ function displayData(table, dataType) {
                 input = document.createElement("textarea");
                 input.setAttribute("rows", "1");
             }
+            if (key === "isAlt" || key === "score") {
+                input.setAttribute("size", "5");
+            }
+            if (key === "gameNames" || key === "artistNames") {
+                input.setAttribute("size", "50");
+            }
             input.value = value;
             if (!editableFieldNames.includes(key)) {
                 input.setAttribute("disabled", "true");
@@ -143,7 +228,7 @@ function displayData(table, dataType) {
                 saveButton.classList.add("changed");
             });
         });
-        row.insertCell().appendChild(saveButton);
+        row.insertCell().appendChild(deleteButton);
     });
 }
 function removeChangedClassFromRow(table, rowIndex) {
@@ -169,8 +254,15 @@ function removeChangedClassFromRow(table, rowIndex) {
 async function saveData(table, rowIndex) {
     const cells = table.rows[rowIndex].cells;
     const dataToSave = {};
+    // loop over all cells in this row and try to get their content to save it
     for (let i = 0; i < cells.length - 1; i++) {
         const input = cells[i].querySelector('input,textarea');
+        if (input === null) {
+            continue;
+        }
+        //NOTE: this minus one came from needing to offset the save button that was added at the front of the rows.
+        //There must be a way we can relate these cells not directly by their index, but by the column they are in.
+        //Maybe directly use the column names as a map?
         const fieldName = fieldNameList[i];
         dataToSave[fieldName] = input.value;
         if (fieldName === "score") {
